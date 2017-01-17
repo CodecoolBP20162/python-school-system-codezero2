@@ -5,7 +5,7 @@ import datetime
 # Configure your database connection here
 # database name = should be your username on your laptop
 # database user = should be your username on your laptop
-db = PostgresqlDatabase('dbname', user='dbuser')
+db = PostgresqlDatabase('atsidir', user='atsidir')
 
 
 class BaseModel(Model):
@@ -19,17 +19,17 @@ class School(BaseModel):
 
 
 class Applicant(BaseModel):
-    applicant_id = CharField(unique=True, default=None)
+    applicant_id = CharField(unique=True, null=True)
     name = CharField()
     #application_date = DateTimeField(default=datetime.datetime.now)
     #interview_date = DateTimeField(default=None)
     city = CharField()
     status = CharField(default="applied")
-    school = ForeignKeyField(School, related_name="applicants")
+    school = ForeignKeyField(School, related_name="applicants",null=True)
 
 
 class City(BaseModel):
-    name = CharField()
+    city_name = CharField()
     location = ForeignKeyField(School, related_name="location")
 
 
@@ -37,13 +37,17 @@ class Mentor(BaseModel):
     name = CharField()
     school = ForeignKeyField(School, related_name="mentors")
 
-
-class Interview(BaseModel):
-    applicant = ForeignKeyField(Applicant, related_name="interview")
-
-
 class InterviewSlot(BaseModel):
     start = CharField()
     end = CharField()
     reserved = BooleanField()
-    assigned_mentor = ForeignKeyField(Mentor, related_name="interview_slot")
+    assigned_mentor = ForeignKeyField(Mentor, related_name="slot")
+
+
+class Interview(BaseModel):
+    applicant = ForeignKeyField(Applicant, related_name="interview")
+    slot=ForeignKeyField(InterviewSlot,related_name='interview')
+
+
+
+
