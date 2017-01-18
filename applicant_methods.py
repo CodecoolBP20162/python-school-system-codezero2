@@ -54,7 +54,7 @@ def assign_school():
         join(City, on=City.city_name == Applicant.city).join(School).naive()
     for item in query:
         # print(item.applicant_id,item.school_id)
-        Applicant.update(school=item.school_id).where(Applicant.id == item.applicant_id).execute()
+        Applicant.update(school=item.school_id).where((Applicant.id == item.applicant_id) & (Applicant.school.is_null(True))).execute()
 
 assign_id()
 assign_school()
