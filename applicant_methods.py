@@ -54,7 +54,53 @@ def assign_school():
         join(City, on=City.city_name == Applicant.city).join(School).naive()
     for item in query:
         # print(item.applicant_id,item.school_id)
-        Applicant.update(school=item.school_id).where((Applicant.id == item.applicant_id) & (Applicant.school.is_null(True))).execute()
+        Applicant.update(school=item.school_id).where(
+            (Applicant.id == item.applicant_id) & (Applicant.school.is_null(True))).execute()
+
+
+def display_all_data():
+    applicants = Applicant.select(Applicant.applicant_id, Applicant.name, Applicant.city,
+                                  Applicant.status, Applicant.school, School.name.alias("school_name")).\
+        join(School).naive()
+
+    for person in applicants:
+        print("\nAPPLICANT ID: {}\nNAME: {}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
+              .format(person.applicant_id, person.name, person.city, person.status, person.school_name))
+
+
+def filter_by_status(string):
+    applicants = Applicant.select(Applicant.applicant_id, Applicant.name, Applicant.city,
+                                  Applicant.status, Applicant.school, School.name.alias("school_name")).\
+        join(School).where(Applicant.status == string).naive()
+
+    for person in applicants:
+        print("\nAPPLICANT ID: {}\nNAME: {}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
+              .format(person.applicant_id, person.name, person.city, person.status, person.school_name))
+
+
+def filter_by_location(string):
+    applicants = Applicant.select(Applicant.applicant_id, Applicant.name, Applicant.city,
+                                  Applicant.status, Applicant.school, School.name.alias("school_name")).\
+        join(School).where(Applicant.city == string).naive()
+
+    for person in applicants:
+        print("\nAPPLICANT ID: {}\nNAME: {}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
+              .format(person.applicant_id, person.name, person.city, person.status, person.school_name))
+
+
+def filter_by_school(string):
+    applicants = Applicant.select(Applicant.applicant_id, Applicant.name, Applicant.city,
+                                  Applicant.status, Applicant.school, School.name.alias("school_name")).\
+        join(School).where(School.name == string).naive()
+
+    for person in applicants:
+        print("\nAPPLICANT ID: {}\nNAME: {}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
+              .format(person.applicant_id, person.name, person.city, person.status, person.school_name))
+
 
 assign_id()
 assign_school()
+# display_all_data()
+# filter_by_status("approved")
+# filter_by_location("Budapest")
+# filter_by_school("Budapest")
