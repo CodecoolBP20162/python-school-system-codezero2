@@ -50,8 +50,10 @@ def assign_id():
 
 def assign_school():
     query = Applicant.\
-        select(Applicant.id.alias('applicant_id'), School.id.alias('school_id')).\
-        join(City, on=City.city_name == Applicant.city).join(School).naive()
+        select(Applicant.id.alias('applicant_id'), School.id.alias('school_id'))\
+                .join(City, on=City.city_name == Applicant.city)\
+                .join(School)\
+                .naive()
     for item in query:
         # print(item.applicant_id,item.school_id)
         Applicant.update(school=item.school_id).where(

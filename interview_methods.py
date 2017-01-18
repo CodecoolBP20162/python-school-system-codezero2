@@ -19,6 +19,17 @@ def assign_interview(applicant):
     Interview.create(applicant=applicant.id,slot=slot.id)
     InterviewSlot.update(reserved=True).where(InterviewSlot.id==slot.id).execute()
 
+def display_all_interview():
+    sub = Mentor.select(Mentor.name, Applicant.name.alias('app_name'), InterviewSlot) \
+        .join(InterviewSlot) \
+        .join(Interview) \
+        .join(Applicant) \
+        .naive()
+
+    for inter in sub:
+        print(inter.name, inter.app_name, inter.start,inter.end)
+
+
 
 app=Applicant.get(Applicant.id==1)
 
@@ -28,6 +39,9 @@ assign_interview(app)
 assign_interview(app2)
 assign_interview(app2)
 assign_interview(app2)
-assign_interview(app2)
+
+
+display_all_interview()
+
 
 
