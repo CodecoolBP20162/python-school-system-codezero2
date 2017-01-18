@@ -24,9 +24,10 @@ Applicant.create(name='Panni',status='new',city='Szeged')
 Applicant.create(name='Ancsika',status='new',city='Debrecen')
 Applicant.create(name='Pancsika',status='new',city='Székesfehérvár')
 Applicant.create(name='Robi',status='new',applicant_id='as3A5',city='Budapest')
-Applicant.create(name='Pavel',status='new',city='Warsaw')
+Applicant.create(name='Pavel',status='approved',city='Warsaw')
 
 InterviewSlot.create(start='2017-01-30 11:00',end='2017-01-30 12:00',reserved=False,assigned_mentor=1)
+InterviewSlot.create(start='2017-01-30 11:00',end='2017-01-30 12:00',reserved=False,assigned_mentor=2)
 InterviewSlot.create(start='2017-01-31 11:00',end='2017-01-30 12:00',reserved=False,assigned_mentor=1)
 InterviewSlot.create(start='2017-01-30 11:00',end='2017-01-30 12:00',reserved=True,assigned_mentor=3)
 

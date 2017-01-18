@@ -43,6 +43,12 @@ class InterviewSlot(BaseModel):
     reserved = BooleanField()
     assigned_mentor = ForeignKeyField(Mentor, related_name="slot")
 
+    class Meta:
+        indexes = (
+            # create a unique on from/to/date
+            (('start', 'end', 'assigned_mentor'), True),
+        )
+
 
 class Interview(BaseModel):
     applicant = ForeignKeyField(Applicant, related_name="interview")
