@@ -31,7 +31,6 @@ def mentor_menu_loop():
             clear()
             display_all_interview()
 
-
         elif choice == "d":
             clear()
             choice = input("Type mentor ID:").lower().strip()
@@ -57,11 +56,10 @@ def applicant_menu_loop():
 
         if choice == "a":
             clear()
-            print("CHOICE A")
+            check_status()
         elif choice == "s":
             clear()
-            print("CHOICE S")
-
+            check_personal_data()
 
 
 def admin_menu_loop():
@@ -93,6 +91,14 @@ def admin_menu_loop():
             clear()
             string = input("Enter status (new/approved): ")
             filter_by_status(string)
+        elif choice == "j":
+            clear()
+            string = input("Enter location: ")
+            filter_by_location(string)
+        elif choice == "k":
+            clear()
+            string = input("Enter school: ")
+            filter_by_school(string)
 
 
 def menu_loop():
@@ -117,7 +123,7 @@ def menu_loop():
             print("CHOICE n")
         elif choice == "d":
             clear()
-            print("CHOICE d")
+            applicant_menu_loop()
 
 main_menu = OrderedDict([
     ("n", "Generate new Applicant"),
@@ -134,7 +140,9 @@ Admin_menu = OrderedDict([
     ("d", "Show applicants with ID"),
     ("f", "Assign ID to new applicants"),
     ("g", "Assign SCHOOL to new applicants"),
-    ("h", "Filter Applicants by status")
+    ("h", "Filter Applicants by status"),
+    ("j", "Filter Applicants by location"),
+    ("k", "Filter Applicants by school")
 ])
 
 Applicant_menu = OrderedDict([
@@ -148,7 +156,6 @@ Mentor_menu = OrderedDict([
     ("s", "Filter by school"),
     ("d", "Filter by mentor")
 ])
-
 
 
 menu_loop()
