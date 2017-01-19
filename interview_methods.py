@@ -27,13 +27,15 @@ def display_all_interview():
         .naive()
 
     for inter in sub:
-        print(inter.name, inter.app_name, inter.start,inter.end)
+        print(inter.name, inter.app_name, inter.start,)
 
 
 
 app=Applicant.get(Applicant.id==1)
 
 app2=Applicant.get(Applicant.id==2)
+display_all_interview()
+print()
 
 assign_interview(app)
 assign_interview(app2)
