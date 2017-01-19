@@ -100,8 +100,15 @@ def filter_by_status(string):
         join(School, join_type=JOIN.FULL).where(Applicant.status == string).naive()
 
     for person in applicants:
-        print("\nAPPLICANT ID: {}\nNAME: {}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
-              .format(person.applicant_id, person.name, person.city, person.status, person.school_name))
+        print("\nAPPLICANT ID: {}\nNAME: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
+              .format(person.applicant_id,
+                      person.name,
+                      person.application_date.year,
+                      person.application_date.month,
+                      person.application_date.day,
+                      person.city,
+                      person.status,
+                      person.school_name))
 
 
 def filter_by_location(string):
@@ -110,8 +117,15 @@ def filter_by_location(string):
         join(School).where(Applicant.city == string).naive()
 
     for person in applicants:
-        print("\nAPPLICANT ID: {}\nNAME: {}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
-              .format(person.applicant_id, person.name, person.city, person.status, person.school_name))
+        print("\nAPPLICANT ID: {}\nNAME: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
+              .format(person.applicant_id,
+                      person.name,
+                      person.application_date.year,
+                      person.application_date.month,
+                      person.application_date.day,
+                      person.city,
+                      person.status,
+                      person.school_name))
 
 
 def filter_by_school(string):
@@ -120,14 +134,35 @@ def filter_by_school(string):
         join(School).where(School.name == string).naive()
 
     for person in applicants:
-        print("\nAPPLICANT ID: {}\nNAME: {}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
-              .format(person.applicant_id, person.name, person.city, person.status, person.school_name))
+        print("\nAPPLICANT ID: {}\nNAME: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
+              .format(person.applicant_id,
+                      person.name,
+                      person.application_date.year,
+                      person.application_date.month,
+                      person.application_date.day,
+                      person.city,
+                      person.status,
+                      person.school_name))
 
 
 """ APPLICANT MENU VIEW - FUNCTIONS """
 
 
 def check_status():
+    code = input("Please enter your application ID: ")
+    applicants = Applicant.select(Applicant.applicant_id, Applicant.name, Applicant.city,
+                                  Applicant.status, Applicant.school, School.name.alias("school_name"))\
+        .join(School, join_type=JOIN.LEFT_OUTER).where(Applicant.applicant_id == code)\
+        .naive()
+
+    for person in applicants:
+        print("\nAPPLICANT ID: {}\nNAME: {}\nSTATUS: {}\n"
+              .format(person.applicant_id,
+                      person.name,
+                      person.status))
+
+
+def check_personal_data():
     code = input("Please enter your application ID: ")
     applicants = Applicant.select(Applicant.applicant_id, Applicant.name, Applicant.city,
                                   Applicant.status, Applicant.school, School.name.alias("school_name"))\
