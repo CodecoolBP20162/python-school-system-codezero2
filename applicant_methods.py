@@ -77,14 +77,21 @@ def assign_school():
 
 
 def display_all_data():
-    applicants = Applicant.select(Applicant.applicant_id, Applicant.name, Applicant.city,
+    applicants = Applicant.select(Applicant.applicant_id, Applicant.name, Applicant.application_date, Applicant.city,
                                   Applicant.status, Applicant.school, School.name.alias("school_name"))\
-        .join(School, join_type=JOIN.FULL)\
+        .join(School, join_type=JOIN.LEFT_OUTER)\
         .naive()
 
     for person in applicants:
-        print("\nAPPLICANT ID: {}\nNAME: {}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
-              .format(person.applicant_id, person.name, person.city, person.status, person.school_name))
+        print("\nAPPLICANT ID: {}\nNAME: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
+              .format(person.applicant_id,
+                      person.name,
+                      person.application_date.year,
+                      person.application_date.month,
+                      person.application_date.day,
+                      person.city,
+                      person.status,
+                      person.school_name))
 
 
 def filter_by_status(string):
@@ -117,9 +124,43 @@ def filter_by_school(string):
               .format(person.applicant_id, person.name, person.city, person.status, person.school_name))
 
 
+""" APPLICANT MENU VIEW - FUNCTIONS """
+
+
+def check_status():
+    code = input("Please enter your application ID: ")
+    applicants = Applicant.select(Applicant.applicant_id, Applicant.name, Applicant.city,
+                                  Applicant.status, Applicant.school, School.name.alias("school_name"))\
+        .join(School, join_type=JOIN.LEFT_OUTER).where(Applicant.applicant_id == code)\
+        .naive()
+
+    for person in applicants:
+        print("\nAPPLICANT ID: {}\nNAME: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
+              .format(person.applicant_id,
+                      person.name,
+                      person.application_date.year,
+                      person.application_date.month,
+                      person.application_date.day,
+                      person.city,
+                      person.status,
+                      person.school_name))
+
+
+'''
+def display_date():
+    applicants = Applicant.select(Applicant.application_date)
+
+    for person in applicants:
+        print("{}-{}-{}"
+              .format(person.application_date.year, person.application_date.month, person.application_date.day,))
+'''
+
 # assign_id()
 # assign_school()
 # display_all_data()
 # filter_by_status("approved")
 # filter_by_location("Budapest")
 # filter_by_school("Budapest")
+# display_date()
+
+# check_status()
