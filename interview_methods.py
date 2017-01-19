@@ -43,7 +43,7 @@ def filter_all_interview(filter):
             .join(Applicant) \
             .where(Mentor.id==filter.id)\
             .naive()
-    if type(filter)==Applicant:
+    elif type(filter)==Applicant:
         sub = Mentor.select(Mentor.name, Applicant.name.alias('app_name'), InterviewSlot,Mentor.school) \
             .join(InterviewSlot) \
             .join(Interview) \
@@ -51,40 +51,15 @@ def filter_all_interview(filter):
             .where(Applicant.id == filter.id) \
             .naive()
 
-    if type(filter)==School:
+    elif type(filter)==School:
         sub = Mentor.select(Mentor.name, Applicant.name.alias('app_name'), InterviewSlot,Mentor.school) \
             .join(InterviewSlot) \
             .join(Interview) \
             .join(Applicant) \
             .where(Mentor.school == filter.id) \
             .naive()
-
+    else:
+        print('date')
 
     for inter in sub:
         print(inter.name, inter.app_name, inter.start,inter.school.name)
-
-print('Először')
-display_all_interview()
-
-
-
-app=Applicant.get(Applicant.id==1)
-
-app2=Applicant.get(Applicant.id==2)
-
-print()
-
-assign_interview(app)
-assign_interview(app2)
-
-print('feltöltve')
-
-display_all_interview()
-print("Matyi's interviews:")
-matyi=Mentor.get(Mentor.id==1)
-filter_all_interview(matyi)
-print('{}  interviews:'.format(app.name))
-filter_all_interview(app)
-school=School.get(School.id==1)
-print("Budapest's interviews:")
-filter_all_interview((school))

@@ -22,8 +22,7 @@ class School(BaseModel):
 class Applicant(BaseModel):
     applicant_id = CharField(unique=True, null=True)
     name = CharField()
-    #application_date = DateTimeField(default=datetime.datetime.now)
-    #interview_date = DateTimeField(default=None)
+    application_date = DateTimeField(default=datetime.datetime.now)
     city = CharField()
     status = CharField(default="applied")
     school = ForeignKeyField(School, related_name="applicants",null=True)
