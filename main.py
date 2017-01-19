@@ -43,11 +43,10 @@ def mentor_menu_loop():
             choice = input("Which schools's interviews do u want to see? Enter school location:").strip()
             clear()
             filter_school(choice)
-        elif choice =='f':
+        elif choice == 'f':
             clear()
             choice = input("Which date do you want to know. Format YYYY-MM-DD: ")
             filter_date(choice)
-
 
 
 def applicant_menu_loop():
@@ -105,6 +104,18 @@ def admin_menu_loop():
             clear()
             string = input("Enter school: ")
             filter_by_school(string)
+        elif choice == "l":
+            clear()
+            string = input("Enter name: ")
+            filter_by_name(string)
+        elif choice == "m":
+            clear()
+            string = input("Enter date (YYYY-MM-DD): ")
+            filter_by_time(string)
+        elif choice == "n":
+            clear()
+            string = input("Enter mentor's name: ")
+            filter_by_mentor(string)
 
 
 def menu_loop():
@@ -148,7 +159,10 @@ Admin_menu = OrderedDict([
     ("g", "Assign SCHOOL to new applicants"),
     ("h", "Filter Applicants by status"),
     ("j", "Filter Applicants by location"),
-    ("k", "Filter Applicants by school")
+    ("k", "Filter Applicants by school"),
+    ("l", "Filter Applicants by name"),
+    ("m", "Filter Applicants by time"),
+    ("n", "Filter Applicants by mentor")
 ])
 
 Applicant_menu = OrderedDict([
