@@ -5,6 +5,7 @@ from mentor_methods import *
 import os
 from collections import OrderedDict
 import time
+import datetime
 
 # Write here your console application
 
@@ -42,6 +43,11 @@ def mentor_menu_loop():
             choice = input("Which schools's interviews do u want to see? Enter school location:").strip()
             clear()
             filter_school(choice)
+        elif choice =='f':
+            clear()
+            choice = input("Which date do you want to know. Format YYYY-MM-DD: ")
+            filter_date(choice)
+
 
 
 def applicant_menu_loop():
@@ -154,7 +160,8 @@ Mentor_menu = OrderedDict([
     ("w", "View mentors"),
     ("a", "View scheduled interviews"),
     ("s", "Filter by school"),
-    ("d", "Filter by mentor")
+    ("d", "Filter by mentor"),
+    ("f", "Filter by date")
 ])
 
 

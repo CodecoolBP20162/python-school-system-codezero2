@@ -63,9 +63,16 @@ def filter_all_interview(filter):
             .where(Mentor.school == filter.id) \
             .naive()
     else:
-        print('date')
+        sub = Mentor.select(Mentor.name, Applicant.name.alias('app_name'), InterviewSlot, Mentor.school) \
+            .join(InterviewSlot) \
+            .join(Interview) \
+            .join(Applicant) \
+            .where(InterviewSlot.start < filter) \
+            .naive()
+
+
     if len(sub)==0:
-        print('{} has no scheduled interview'.format(filter.name))
+        print('there are no scheduled iws')
     else:
         for inter in sub:
             print(inter.name, inter.app_name, inter.start, inter.school.name)
@@ -81,5 +88,8 @@ def filter_school(text):
     else:
         school = school[0]
         filter_all_interview(school)
+
+def filter_date(date):
+    filter_all_interview(date)
 
 
