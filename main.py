@@ -36,7 +36,7 @@ def mentor_menu_loop():
             clear()
             choice = input("Type mentor ID:").lower().strip()
             clear()
-            filter_ui(int(choice))
+            filter_mentor(int(choice))
 
         elif choice == "s":
             clear()
