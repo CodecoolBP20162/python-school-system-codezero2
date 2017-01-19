@@ -2,6 +2,7 @@ from models import *
 from applicant_methods import *
 from interview_methods import *
 from mentor_methods import *
+from new_applicants import *
 import os
 from collections import OrderedDict
 import time
@@ -140,7 +141,7 @@ def menu_loop():
             mentor_menu_loop()
         elif choice == "n":
             clear()
-            print("CHOICE n")
+            generate_applicant()
         elif choice == "d":
             clear()
             applicant_menu_loop()
