@@ -3,8 +3,12 @@ import example_data
 import random
 
 
-def random_slot():
-    free_slots=InterviewSlot.select().where(InterviewSlot.reserved==False)
+def random_slot(applicant):
+    if applicant.school is not None:
+        free_slots=InterviewSlot.select().join(Mentor).where((InterviewSlot.reserved==False)&(Mentor.school==applicant.school.id))
+    else:
+        print('Applicant has no school yet,please assign school first')
+        return None
     try:
         free_slot=random.choice(free_slots)
     except IndexError:
@@ -12,7 +16,7 @@ def random_slot():
     return free_slot
 
 def assign_interview(applicant):
-    slot=random_slot()
+    slot=random_slot(applicant)
     if slot is None:
         print('There is no available interview slot for ',applicant.name)
         return False
@@ -20,30 +24,67 @@ def assign_interview(applicant):
     InterviewSlot.update(reserved=True).where(InterviewSlot.id==slot.id).execute()
 
 def display_all_interview():
-    sub = Mentor.select(Mentor.name, Applicant.name.alias('app_name'), InterviewSlot) \
+    sub = Mentor.select(Mentor.name, Applicant.name.alias('app_name'), InterviewSlot,Mentor.school) \
+        .join(School) \
+        .switch(Mentor) \
         .join(InterviewSlot) \
         .join(Interview) \
-        .join(Applicant) \
+        .join(Applicant)\
         .naive()
 
     for inter in sub:
-        print(inter.name, inter.app_name, inter.start,)
+        print(inter.name, inter.app_name, inter.start,inter.school.name)
+
+def filter_all_interview(filter):
+    if type(filter)==Mentor:
+        sub = Mentor.select(Mentor.name, Applicant.name.alias('app_name'), InterviewSlot,Mentor.school) \
+            .join(InterviewSlot) \
+            .join(Interview) \
+            .join(Applicant) \
+            .where(Mentor.id==filter.id)\
+            .naive()
+    if type(filter)==Applicant:
+        sub = Mentor.select(Mentor.name, Applicant.name.alias('app_name'), InterviewSlot,Mentor.school) \
+            .join(InterviewSlot) \
+            .join(Interview) \
+            .join(Applicant) \
+            .where(Applicant.id == filter.id) \
+            .naive()
+
+    if type(filter)==School:
+        sub = Mentor.select(Mentor.name, Applicant.name.alias('app_name'), InterviewSlot,Mentor.school) \
+            .join(InterviewSlot) \
+            .join(Interview) \
+            .join(Applicant) \
+            .where(Mentor.school == filter.id) \
+            .naive()
+
+
+    for inter in sub:
+        print(inter.name, inter.app_name, inter.start,inter.school.name)
+
+print('Először')
+display_all_interview()
 
 
 
 app=Applicant.get(Applicant.id==1)
 
 app2=Applicant.get(Applicant.id==2)
-display_all_interview()
+
 print()
 
 assign_interview(app)
 assign_interview(app2)
-assign_interview(app2)
-assign_interview(app2)
 
+print('feltöltve')
 
 display_all_interview()
-
-
-
+print("Matyi's interviews:")
+matyi=Mentor.get(Mentor.id==1)
+filter_all_interview(matyi)
+print('{}  interviews:'.format(app.name))
+filter_all_interview(app)
+school=School.get(School.id==1)
+print("Budapest's interviews:")
+filter_all_interview((school))
