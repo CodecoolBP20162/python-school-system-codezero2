@@ -77,7 +77,10 @@ def assign_school():
 
 
 def display_all_data():
-    applicants = Applicant.select().where(Applicant.school.is_null(False))
+    applicants =  Applicant.select(Applicant.applicant_id, Applicant.name, Applicant.application_date, Applicant.city,\
+                  Applicant.status, Applicant.school, School.name.alias("school_name"))\
+                  .join(School, join_type=JOIN.LEFT_OUTER)\
+                  .naive()
 
     for person in applicants:
         print("\nAPPLICANT ID: {}\nNAME: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
@@ -88,7 +91,7 @@ def display_all_data():
                       person.application_date.day,
                       person.city,
                       person.status,
-                      person.school.name))
+                      person.school_name))
 
 
 def filter_by_status(string):
