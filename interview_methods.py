@@ -16,13 +16,15 @@ def random_slot(applicant):
     return free_slot
 
 
-def assign_interview(applicant):
-    slot = random_slot(applicant)
-    if slot is None:
-        print('There is no available interview slot for ', applicant.name)
-        return False
-    Interview.create(applicant=applicant.id, slot=slot.id)
-    InterviewSlot.update(reserved=True).where(InterviewSlot.id == slot.id).execute()
+def assign_interviews():
+    sub=select_applicant_wo_interview()
+    for applicant in sub:
+        slot = random_slot(applicant)
+        if slot is None:
+            print('There is no available interview slot for ', applicant.name)
+            return False
+        Interview.create(applicant=applicant.id, slot=slot.id)
+        InterviewSlot.update(reserved=True).where(InterviewSlot.id == slot.id).execute()
 
 
 def display_all_interview():
@@ -92,4 +94,6 @@ def filter_school(text):
 def filter_date(date):
     filter_all_interview(date)
 
-
+def select_applicant_wo_interview():
+    sub=Applicant.select().join(Interview,join_type=JOIN_LEFT_OUTER).where(Interview.applicant==None)
+    return sub

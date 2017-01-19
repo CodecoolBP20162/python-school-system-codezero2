@@ -92,6 +92,9 @@ def admin_menu_loop():
         elif choice == "g":
             clear()
             assign_school()
+        elif choice == "t":
+            clear()
+            assign_interviews()
         elif choice == "h":
             clear()
             string = input("Enter status (new/approved): ")
@@ -156,6 +159,7 @@ Admin_menu = OrderedDict([
     ("s", "Show applicants w/o ID"),
     ("d", "Show applicants with ID"),
     ("f", "Assign ID to new applicants"),
+    ("t", "Assign interview to new applicants"),
     ("g", "Assign SCHOOL to new applicants"),
     ("h", "Filter Applicants by status"),
     ("j", "Filter Applicants by location"),
