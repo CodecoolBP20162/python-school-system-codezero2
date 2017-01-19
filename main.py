@@ -11,13 +11,31 @@ def clear():
     os.system("cls" if os.name == "nt" else "clear")
 
 
+def mentor_menu_loop():
+    choice = None
+
+    while choice != "q":
+        print("\n--MENTOR MENU--\n")
+        print("Enter 'q' to go back\n")
+        for key, value in Mentor_menu.items():
+            print("{}) {}".format(key, value))
+        choice = input("Enter choice: ").lower().strip()
+
+        if choice == "a":
+            clear()
+            print("CHOICE A")
+        elif choice == "s":
+            clear()
+            print("CHOICE S")
+
+
 def applicant_menu_loop():
     choice = None
 
     while choice != "q":
         print("\n--APPLICANT MENU--\n")
         print("Enter 'q' to go back\n")
-        for key, value in Admin_menu.items():
+        for key, value in Applicant_menu.items():
             print("{}) {}".format(key, value))
         choice = input("Enter choice: ").lower().strip()
 
@@ -92,6 +110,15 @@ Admin_menu = OrderedDict([
     ("f", "Assign ID to new applicants"),
     ("g", "Assign SCHOOL to new applicants"),
     ("h", "Filter Applicants by status")
+])
+
+Applicant_menu = OrderedDict([
+    ("a", "Check application status"),
+    ("s", "View personal data")
+])
+
+Mentor_menu = OrderedDict([
+    ("a", "View scheduled interviews")
 ])
 
 
