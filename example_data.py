@@ -34,3 +34,4 @@ InterviewSlot.create(start='2017-01-31 11:00',end='2017-01-30 12:00',reserved=Fa
 InterviewSlot.create(start='2017-01-30 11:00',end='2017-01-30 12:00',reserved=True,assigned_mentor=4)
 
 Interview.create(applicant=5,slot=5)
+Interview.create(applicant=4,slot=1)

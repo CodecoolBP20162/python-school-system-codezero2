@@ -1,5 +1,7 @@
 from models import *
 from applicant_methods import *
+from interview_methods import *
+from mentor_methods import *
 import os
 from collections import OrderedDict
 import time
@@ -21,12 +23,26 @@ def mentor_menu_loop():
             print("{}) {}".format(key, value))
         choice = input("Enter choice: ").lower().strip()
 
+        if choice == "w":
+            clear()
+            display_all_mentor()
+
         if choice == "a":
             clear()
-            print("CHOICE A")
+            display_all_interview()
+
+
+        elif choice == "d":
+            clear()
+            choice = input("Type mentor ID:").lower().strip()
+            clear()
+            filter_ui(int(choice))
+
         elif choice == "s":
             clear()
-            print("CHOICE S")
+            choice = input("Which schools's interviews do u want to see? Enter school location:").strip()
+            clear()
+            filter_school(choice)
 
 
 def applicant_menu_loop():
@@ -45,6 +61,7 @@ def applicant_menu_loop():
         elif choice == "s":
             clear()
             print("CHOICE S")
+
 
 
 def admin_menu_loop():
@@ -94,12 +111,20 @@ def menu_loop():
             admin_menu_loop()
         elif choice == "s":
             clear()
-            print("CHOICE S")
+            mentor_menu_loop()
+        elif choice == "n":
+            clear()
+            print("CHOICE n")
+        elif choice == "d":
+            clear()
+            print("CHOICE d")
 
 main_menu = OrderedDict([
+    ("n", "Generate new Applicant"),
     ("a", "Administrator menu"),
     ("s", "Mentor menu"),
     ("d", "Applicant menu")
+
 ])
 
 
@@ -118,8 +143,12 @@ Applicant_menu = OrderedDict([
 ])
 
 Mentor_menu = OrderedDict([
-    ("a", "View scheduled interviews")
+    ("w", "View mentors"),
+    ("a", "View scheduled interviews"),
+    ("s", "Filter by school"),
+    ("d", "Filter by mentor")
 ])
+
 
 
 menu_loop()

@@ -5,8 +5,7 @@ import random
 
 def random_slot(applicant):
     if applicant.school is not None:
-        free_slots = InterviewSlot.select().join(Mentor).where(
-            (InterviewSlot.reserved == False) & (Mentor.school == applicant.school.id))
+        free_slots = InterviewSlot.select().join(Mentor).where((InterviewSlot.reserved == False) & (Mentor.school == applicant.school.id))
     else:
         print('Applicant has no school yet,please assign school first')
         return None
@@ -47,6 +46,7 @@ def filter_all_interview(filter):
             .join(Applicant) \
             .where(Mentor.id == filter.id)\
             .naive()
+
     elif type(filter) == Applicant:
         sub = Mentor.select(Mentor.name, Applicant.name.alias('app_name'), InterviewSlot, Mentor.school) \
             .join(InterviewSlot) \
@@ -64,6 +64,22 @@ def filter_all_interview(filter):
             .naive()
     else:
         print('date')
+    if len(sub)==0:
+        print('{} has no scheduled interview'.format(filter.name))
+    else:
+        for inter in sub:
+            print(inter.name, inter.app_name, inter.start, inter.school.name)
 
-    for inter in sub:
-        print(inter.name, inter.app_name, inter.start, inter.school.name)
+def filter_mentor(number):
+    mentor=Mentor.get(Mentor.id==number)
+    filter_all_interview(mentor)
+
+def filter_school(text):
+    school=School.select().where(School.name==text)
+    if len(school)==0:
+        print('type again')
+    else:
+        school = school[0]
+        filter_all_interview(school)
+
+
