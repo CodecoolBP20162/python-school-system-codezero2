@@ -35,6 +35,21 @@ def get_applicants_without_id():
     return id_list
 
 
+def show_applicants_without_id():
+    applicant_list = get_applicants_without_id()
+    for item in applicant_list:
+        print(item)
+
+
+def show_applicants_with_id():
+    applicant_list = []
+    all_id = Applicant.select().where(Applicant.applicant_id.is_null(False))
+    for item in all_id:
+        applicant_list.append((item.applicant_id, item.name, item.city))
+    for item in applicant_list:
+        print(item)
+
+
 # MAIN FUNCTION ##### checks, generates and assignes new applicant_ids
 
 
@@ -51,9 +66,9 @@ def assign_id():
 def assign_school():
     query = Applicant.\
         select(Applicant.id.alias('applicant_id'), School.id.alias('school_id'))\
-                .join(City, on=City.city_name == Applicant.city)\
-                .join(School)\
-                .naive()
+        .join(City, on=City.city_name == Applicant.city)\
+        .join(School)\
+        .naive()
     for item in query:
         # print(item.applicant_id,item.school_id)
         Applicant.update(school=item.school_id)\
@@ -63,8 +78,9 @@ def assign_school():
 
 def display_all_data():
     applicants = Applicant.select(Applicant.applicant_id, Applicant.name, Applicant.city,
-                                  Applicant.status, Applicant.school, School.name.alias("school_name")).\
-        join(School).naive()
+                                  Applicant.status, Applicant.school, School.name.alias("school_name"))\
+        .join(School, join_type=JOIN.FULL)\
+        .naive()
 
     for person in applicants:
         print("\nAPPLICANT ID: {}\nNAME: {}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
@@ -74,7 +90,7 @@ def display_all_data():
 def filter_by_status(string):
     applicants = Applicant.select(Applicant.applicant_id, Applicant.name, Applicant.city,
                                   Applicant.status, Applicant.school, School.name.alias("school_name")).\
-        join(School).where(Applicant.status == string).naive()
+        join(School, join_type=JOIN.FULL).where(Applicant.status == string).naive()
 
     for person in applicants:
         print("\nAPPLICANT ID: {}\nNAME: {}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
@@ -101,8 +117,8 @@ def filter_by_school(string):
               .format(person.applicant_id, person.name, person.city, person.status, person.school_name))
 
 
-assign_id()
-assign_school()
+# assign_id()
+# assign_school()
 # display_all_data()
 # filter_by_status("approved")
 # filter_by_location("Budapest")
