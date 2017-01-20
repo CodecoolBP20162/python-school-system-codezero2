@@ -27,27 +27,27 @@ def mentor_menu_loop():
 
         if choice == "w":
             clear()
-            display_all_mentor()
+            mentor_methods.display_all_mentor()
 
         if choice == "a":
             clear()
-            display_all_interview()
+            interview_methods.display_all_interview()
 
         elif choice == "d":
             clear()
             choice = input("Type mentor ID:").lower().strip()
             clear()
-            filter_mentor(int(choice))
+            interview_methods.filter_mentor(int(choice))
 
         elif choice == "s":
             clear()
             choice = input("Which schools's interviews do u want to see? Enter school location:").strip()
             clear()
-            filter_school(choice)
+            interview_methods.filter_school(choice)
         elif choice == 'f':
             clear()
             choice = input("Which date do you want to know. Format YYYY-MM-DD: ")
-            filter_date(choice)
+            interview_methods.filter_date(choice)
 
 
 def applicant_menu_loop():
@@ -62,10 +62,10 @@ def applicant_menu_loop():
 
         if choice == "a":
             clear()
-            check_status()
+            applicant_methods.check_status()
         elif choice == "s":
             clear()
-            check_personal_data()
+            applicant_methods.check_personal_data()
 
 
 def admin_menu_loop():
@@ -80,46 +80,40 @@ def admin_menu_loop():
 
         if choice == "a":
             clear()
-            display_all_data()
-        elif choice == "s":
-            clear()
-            show_applicants_without_id()
-        elif choice == "d":
-            clear()
-            show_applicants_with_id()
+            applicant_methods.display_all_data()
         elif choice == "f":
             clear()
-            assign_id()
+            applicant_methods.assign_id()
         elif choice == "g":
             clear()
-            assign_school()
+            applicant_methods.assign_school()
         elif choice == "t":
             clear()
-            assign_interviews()
+            interview_methods.assign_interviews()
         elif choice == "h":
             clear()
             string = input("Enter status (new/approved): ")
-            filter_by_status(string)
+            applicant_methods.filter_by_status(string)
         elif choice == "j":
             clear()
             string = input("Enter location: ")
-            filter_by_location(string)
+            applicant_methods.filter_by_location(string)
         elif choice == "k":
             clear()
             string = input("Enter school: ")
-            filter_by_school(string)
+            applicant_methods.filter_by_school(string)
         elif choice == "l":
             clear()
             string = input("Enter name: ")
-            filter_by_name(string)
+            applicant_methods.filter_by_name(string)
         elif choice == "m":
             clear()
             string = input("Enter date (YYYY-MM-DD): ")
-            filter_by_time(string)
+            applicant_methods.filter_by_time(string)
         elif choice == "n":
             clear()
             string = input("Enter mentor's name: ")
-            filter_by_mentor(string)
+            applicant_methods.filter_by_mentor(string)
 
 
 def menu_loop():
@@ -141,7 +135,7 @@ def menu_loop():
             mentor_menu_loop()
         elif choice == "n":
             clear()
-            generate_applicant()
+            new_applicants.generate_applicant()
         elif choice == "d":
             clear()
             applicant_menu_loop()
@@ -157,8 +151,6 @@ main_menu = OrderedDict([
 
 Admin_menu = OrderedDict([
     ("a", "Display all applicants"),
-    ("s", "Show applicants w/o ID"),
-    ("d", "Show applicants with ID"),
     ("f", "Assign ID to new applicants"),
     ("t", "Assign interview to new applicants"),
     ("g", "Assign SCHOOL to new applicants"),

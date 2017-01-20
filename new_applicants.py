@@ -4,18 +4,22 @@
 from models import *
 import random
 
-names = [
-		"Tomi", "Anna", "Zotya", "Tibi", 
-		"Jani", "Sanyi", "Orsi", "Kitti", 
-		"Ond", "Kond", "Tas", "Huba", 
-		"Töhötöm", "Álmos", "Előd"
-		]
 
-cities = ["Debrecen", "Szeged", "Budapest", "Warsaw", "Székesfehérvár"]
+class new_applicants:
 
-def generate_applicant():
-	random_name = random.choice(names)
-	random_city = random.choice(cities)
-	names.remove(random_name)
-	Applicant.create(name=random_name,status='new',city=random_city)
-	print("\nNew applicant --{}-- created\n".format(random_name))	
+    names = [
+        "Tomi", "Anna", "Zotya", "Tibi",
+        "Jani", "Sanyi", "Orsi", "Kitti",
+        "Ond", "Kond", "Tas", "Huba",
+        "Töhötöm", "Álmos", "Előd"
+    ]
+
+    cities = ["Debrecen", "Szeged", "Budapest", "Warsaw", "Székesfehérvár"]
+
+    @classmethod
+    def generate_applicant(cls):
+        random_name = random.choice(cls.names)
+        random_city = random.choice(cls.cities)
+        cls.names.remove(random_name)
+        Applicant.create(name=random_name, status='new', city=random_city)
+        print("\nNew applicant --{}-- created\n".format(random_name))
