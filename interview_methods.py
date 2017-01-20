@@ -36,8 +36,7 @@ def display_all_interview():
         .join(Applicant)\
         .naive()
 
-    for inter in sub:
-        print(inter.name, inter.app_name, inter.start, inter.school.name)
+    print_interview_table(sub)
 
 
 def filter_all_interview(filter):

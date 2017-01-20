@@ -20,6 +20,6 @@ def print_interview_table(table):
         print('|' + str(line.start).center(title_list_len[2] + 5) + "|", end="")
         print('|' + line.school.name.center(title_list_len[3] + 5) + "|", end="")
         print('\n', end="")
-        if line ==table[-1]:
+        if line !=table[-1]:
             print('-' * (sum_title(title_list_len) + len(title_list) * 7))
     print('\\' + '-' * (sum_title(title_list_len) + len(title_list) * 7 - 2) + '/')
