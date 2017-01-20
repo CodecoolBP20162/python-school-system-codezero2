@@ -5,10 +5,11 @@ import example_data
 class mentor_methods:
 
     def display_all_mentor():
-        mentors = Mentor.select(Mentor.id, Mentor.name, School.name.alias("school_name"))\
-            .join(School)\
-            .naive()
+        mentors = Mentor.select()
 
         for person in mentors:
+            school_name = "None"
+            if person.school is not None:
+                school_name = person.school.name
             print("\nMentor ID: {}\nNAME: {}\nSchool: {}"
-                  .format(person.id, person.name, person.school_name))
+                  .format(person.id, person.name, school_name))

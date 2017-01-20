@@ -10,7 +10,7 @@ class applicant_methods:
 
     @classmethod
     def generate_random(cls):
-        existing_ids = applicant_methods.get_all_applicant_id()
+        existing_ids = cls.get_all_applicant_id()
         generated = ''
         generated += random.choice(string.ascii_lowercase)
         generated += random.choice(string.ascii_lowercase)
@@ -92,6 +92,7 @@ class applicant_methods:
         '''
 
         applicants = Applicant.select()
+
         for person in applicants:
             school_name = "None"
             if person.school is not None:
@@ -124,11 +125,12 @@ class applicant_methods:
                           school_name))
 
     def filter_by_location(string):
-        applicants = Applicant.select(Applicant.applicant_id, Applicant.name, Applicant.city,
-                                      Applicant.status, Applicant.school, School.name.alias("school_name")).\
-            join(School).where(Applicant.city == string).naive()
+        applicants = Applicant.select().where(Applicant.city == string)
 
         for person in applicants:
+            school_name = "None"
+            if person.school is not None:
+                school_name = person.school.name
             print("\nAPPLICANT ID: {}\nNAME: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
                   .format(person.applicant_id,
                           person.name,
@@ -137,9 +139,11 @@ class applicant_methods:
                           person.application_date.day,
                           person.city,
                           person.status,
-                          person.school_name))
+                          school_name))
 
     def filter_by_school(string):
+        #applicants = Applicant.select().where(Applicant.school.name == string)
+
         applicants = Applicant.select(Applicant.applicant_id, Applicant.name, Applicant.city,
                                       Applicant.status, Applicant.school, School.name.alias("school_name")).\
             join(School).where(School.name == string).naive()
@@ -156,11 +160,12 @@ class applicant_methods:
                           person.school_name))
 
     def filter_by_name(string):
-        applicants = Applicant.select(Applicant.applicant_id, Applicant.name, Applicant.city,
-                                      Applicant.status, Applicant.school, School.name.alias("school_name")).\
-            join(School, join_type=JOIN.LEFT_OUTER).where(Applicant.name == string).naive()
+        applicants = Applicant.select().where(Applicant.name == string)
 
         for person in applicants:
+            school_name = "None"
+            if person.school is not None:
+                school_name = person.school.name
             print("\nAPPLICANT ID: {}\nNAME: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
                   .format(person.applicant_id,
                           person.name,
@@ -169,15 +174,16 @@ class applicant_methods:
                           person.application_date.day,
                           person.city,
                           person.status,
-                          person.school_name))
+                          school_name))
 
     def filter_by_time(string):
-        applicants = Applicant.select(Applicant.applicant_id, Applicant.name, Applicant.city,
-                                      Applicant.status, Applicant.school, School.name.alias("school_name")).\
-            join(School).where(Applicant.application_date == string).naive()
+        applicants = Applicant.select().where(Applicant.application_date == string)
 
         try:
             for person in applicants:
+                school_name = "None"
+                if person.school is not None:
+                    school_name = person.school.name
                 print("\nAPPLICANT ID: {}\nNAME: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
                       .format(person.applicant_id,
                               person.name,
@@ -186,7 +192,7 @@ class applicant_methods:
                               person.application_date.day,
                               person.city,
                               person.status,
-                              person.school_name))
+                              school_name))
         except DataError:
             print("Invalid format")
 
@@ -210,26 +216,26 @@ class applicant_methods:
 
     def check_status():
         code = input("Please enter your application ID: ")
-        applicants = Applicant.select(Applicant.applicant_id, Applicant.name, Applicant.city,
-                                      Applicant.status, Applicant.school, School.name.alias("school_name"))\
-            .join(School, join_type=JOIN.LEFT_OUTER).where(Applicant.applicant_id == code)\
-            .naive()
+        applicants = Applicant.select().where(Applicant.applicant_id == code)
 
         for person in applicants:
+            school_name = "None"
+            if person.school is not None:
+                school_name = person.school.name
             print("\nAPPLICANT ID: {}\nNAME: {}\nSTATUS: {}\nSCHOOL:{}\n"
                   .format(person.applicant_id,
                           person.name,
                           person.status,
-                          person.school_name))
+                          school_name))
 
     def check_personal_data():
         code = input("Please enter your application ID: ")
-        applicants = Applicant.select(Applicant.applicant_id, Applicant.name, Applicant.city,
-                                      Applicant.status, Applicant.school, School.name.alias("school_name"))\
-            .join(School, join_type=JOIN.LEFT_OUTER).where(Applicant.applicant_id == code)\
-            .naive()
+        applicants = Applicant.select().where(Applicant.applicant_id == code)
 
         for person in applicants:
+            school_name = "None"
+            if person.school is not None:
+                school_name = person.school.name
             print("\nAPPLICANT ID: {}\nNAME: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
                   .format(person.applicant_id,
                           person.name,
@@ -238,18 +244,4 @@ class applicant_methods:
                           person.application_date.day,
                           person.city,
                           person.status,
-                          person.school_name))
-
-
-# assign_id()
-# assign_school()
-# display_all_data()
-# filter_by_status("approved")
-# filter_by_location("Budapest")
-# filter_by_school("Budapest")
-# display_date()
-
-# check_status()
-# filter_by_name("Pavel")
-# filter_by_time("2017-01-19")
-# filter_by_mentor("Matyi")
+                          school_name))
