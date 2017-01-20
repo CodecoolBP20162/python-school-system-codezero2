@@ -1,7 +1,7 @@
 from models import *
 import example_data
 import random
-
+from print_table import *
 
 def random_slot(applicant):
     if applicant.school is not None:
@@ -76,8 +76,7 @@ def filter_all_interview(filter):
     if len(sub)==0:
         print('there are no scheduled iws')
     else:
-        for inter in sub:
-            print(inter.name, inter.app_name, inter.start, inter.school.name)
+        print_interview_table(sub)
 
 def filter_mentor(number):
     mentor=Mentor.get(Mentor.id==number)
