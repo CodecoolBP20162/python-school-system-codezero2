@@ -141,38 +141,38 @@ def menu_loop():
             applicant_menu_loop()
 
 main_menu = OrderedDict([
-    ("n", "Generate new Applicant"),
-    ("a", "Administrator menu"),
-    ("s", "Mentor menu"),
-    ("d", "Applicant menu")
+    (" n", "Generate new Applicant"),
+    (" a", "Administrator menu"),
+    (" s", "Mentor menu"),
+    (" d", "Applicant menu")
 
 ])
 
 
 Admin_menu = OrderedDict([
-    ("a", "Display all applicants"),
-    ("f", "Assign ID to new applicants"),
-    ("t", "Assign interview to new applicants"),
-    ("g", "Assign SCHOOL to new applicants"),
-    ("h", "Filter Applicants by status"),
-    ("j", "Filter Applicants by location"),
-    ("k", "Filter Applicants by school"),
-    ("l", "Filter Applicants by name"),
-    ("m", "Filter Applicants by time"),
-    ("n", "Filter Applicants by mentor")
+    (" a", "Display all applicants"),
+    (" f", "Assign ID to new applicants"),
+    (" t", "Assign interview to new applicants"),
+    (" g", "Assign SCHOOL to new applicants"),
+    (" h", "Filter Applicants by status"),
+    (" j", "Filter Applicants by location"),
+    (" k", "Filter Applicants by school"),
+    (" l", "Filter Applicants by name"),
+    (" m", "Filter Applicants by time"),
+    (" n", "Filter Applicants by mentor")
 ])
 
 Applicant_menu = OrderedDict([
-    ("a", "Check application status"),
-    ("s", "View personal data")
+    (" a", "Check application status"),
+    (" s", "View personal data")
 ])
 
 Mentor_menu = OrderedDict([
-    ("w", "View mentors"),
-    ("a", "View scheduled interviews"),
-    ("s", "Filter by school"),
-    ("d", "Filter by mentor"),
-    ("f", "Filter by date")
+    (" w", "View mentors"),
+    (" a", "View scheduled interviews"),
+    (" s", "Filter by school"),
+    (" d", "Filter by mentor"),
+    (" f", "Filter by date")
 ])
 
 
