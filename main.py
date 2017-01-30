@@ -8,6 +8,7 @@ from collections import OrderedDict
 import time
 import datetime
 
+
 # Write here your console application
 
 
@@ -60,7 +61,10 @@ def applicant_menu_loop():
             print("{}) {}".format(key, value))
         choice = input("Enter choice: ").lower().strip()
 
-        if choice == "a":
+        if choice == "n":
+            clear()
+            #applicant_methods.register
+        elif choice == "a":
             clear()
             applicant_methods.check_status()
         elif choice == "s":
@@ -140,6 +144,7 @@ def menu_loop():
             clear()
             applicant_menu_loop()
 
+
 main_menu = OrderedDict([
     (" n", "Generate new Applicant"),
     (" a", "Administrator menu"),
@@ -147,7 +152,6 @@ main_menu = OrderedDict([
     (" d", "Applicant menu")
 
 ])
-
 
 Admin_menu = OrderedDict([
     (" a", "Display all applicants"),
@@ -163,6 +167,7 @@ Admin_menu = OrderedDict([
 ])
 
 Applicant_menu = OrderedDict([
+    (" n", "Register as new applicant")
     (" a", "Check application status"),
     (" s", "View personal data")
 ])
@@ -174,6 +179,5 @@ Mentor_menu = OrderedDict([
     (" d", "Filter by mentor"),
     (" f", "Filter by date")
 ])
-
 
 menu_loop()

@@ -3,7 +3,6 @@ import example_data
 
 
 class mentor_methods:
-
     def display_all_mentor():
         mentors = Mentor.select()
 
@@ -11,5 +10,5 @@ class mentor_methods:
             school_name = "None"
             if person.school is not None:
                 school_name = person.school.name
-            print("\nMentor ID: {}\nNAME: {}\nSchool: {}"
-                  .format(person.id, person.name, school_name))
+            print("\nMENTOR ID: {}\nFIRST NAME: {}\nLAST NAME: {}\nEMAIL: {}\nSCHOOL: {}"
+                  .format(person.id, person.first_name, person.last_name, person.email, school_name))

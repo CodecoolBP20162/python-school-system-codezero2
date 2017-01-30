@@ -7,7 +7,6 @@ import example_data
 
 
 class applicant_methods:
-
     @classmethod
     def generate_random(cls):
         existing_ids = cls.get_all_applicant_id()
@@ -44,7 +43,7 @@ class applicant_methods:
         applicant_list = []
         all_id = Applicant.select().where(Applicant.applicant_id.is_null(False))
         for item in all_id:
-            applicant_list.append((item.applicant_id, item.name, item.city))
+            applicant_list.append((item.applicant_id, item.first_name, item.last_name, item.city))
         for item in applicant_list:
             print(item)
 
@@ -61,15 +60,15 @@ class applicant_methods:
         print("done")
 
     def assign_school():
-        query = Applicant.\
-            select(Applicant.id.alias('applicant_id'), School.id.alias('school_id'))\
-            .join(City, on=City.city_name == Applicant.city)\
-            .join(School)\
+        query = Applicant. \
+            select(Applicant.id.alias('applicant_id'), School.id.alias('school_id')) \
+            .join(City, on=City.city_name == Applicant.city) \
+            .join(School) \
             .naive()
         for item in query:
             # print(item.applicant_id,item.school_id)
-            Applicant.update(school=item.school_id)\
-                .where((Applicant.id == item.applicant_id) & (Applicant.school.is_null(True)))\
+            Applicant.update(school=item.school_id) \
+                .where((Applicant.id == item.applicant_id) & (Applicant.school.is_null(True))) \
                 .execute()
 
     def display_all_data():
@@ -97,9 +96,11 @@ class applicant_methods:
             school_name = "None"
             if person.school is not None:
                 school_name = person.school.name
-            print("\nAPPLICANT ID: {}\nNAME: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
+            print("\nAPPLICANT ID: {}\nFIRST NAME: {}\nLAST NAME: {}\nEMAIL: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
                   .format(person.applicant_id,
-                          person.name,
+                          person.first_name,
+                          person.last_name,
+                          person.email,
                           person.application_date.year,
                           person.application_date.month,
                           person.application_date.day,
@@ -114,9 +115,11 @@ class applicant_methods:
             school_name = "None"
             if person.school is not None:
                 school_name = person.school.name
-            print("\nAPPLICANT ID: {}\nNAME: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
+            print("\nAPPLICANT ID: {}\nFIRST NAME: {}\nLAST NAME: {}\nEMAIL: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
                   .format(person.applicant_id,
-                          person.name,
+                          person.first_name,
+                          person.last_name,
+                          person.email,
                           person.application_date.year,
                           person.application_date.month,
                           person.application_date.day,
@@ -131,9 +134,11 @@ class applicant_methods:
             school_name = "None"
             if person.school is not None:
                 school_name = person.school.name
-            print("\nAPPLICANT ID: {}\nNAME: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
+            print("\nAPPLICANT ID: {}\nFIRST NAME: {}\nLAST NAME: {}\nEMAIL: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
                   .format(person.applicant_id,
-                          person.name,
+                          person.first_name,
+                          person.last_name,
+                          person.email,
                           person.application_date.year,
                           person.application_date.month,
                           person.application_date.day,
@@ -142,33 +147,37 @@ class applicant_methods:
                           school_name))
 
     def filter_by_school(string):
-        #applicants = Applicant.select().where(Applicant.school.name == string)
+        # applicants = Applicant.select().where(Applicant.school.name == string)
 
-        applicants = Applicant.select(Applicant.applicant_id, Applicant.name, Applicant.city,
-                                      Applicant.status, Applicant.school, School.name.alias("school_name")).\
+        applicants = Applicant.select(Applicant.applicant_id, Applicant.first_name, Applicant.last_name, Applicant.city,
+                                      Applicant.status, Applicant.school, School.name.alias("school_name")). \
             join(School).where(School.name == string).naive()
 
         for person in applicants:
-            print("\nAPPLICANT ID: {}\nNAME: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
+            print("\nAPPLICANT ID: {}\nFIRST NAME: {}\nLAST NAME: {}\nEMAIL: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
                   .format(person.applicant_id,
-                          person.name,
+                          person.first_name,
+                          person.last_name,
+                          person.email,
                           person.application_date.year,
                           person.application_date.month,
                           person.application_date.day,
                           person.city,
                           person.status,
-                          person.school_name))
+                          school_name))
 
-    def filter_by_name(string):
-        applicants = Applicant.select().where(Applicant.name == string)
+    def filter_by_name(string1, string2):
+        applicants = Applicant.select().where(Applicant.first_name == string1, Applicant.last_name == string2)
 
         for person in applicants:
             school_name = "None"
             if person.school is not None:
                 school_name = person.school.name
-            print("\nAPPLICANT ID: {}\nNAME: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
+            print("\nAPPLICANT ID: {}\nFIRST NAME: {}\nLAST NAME: {}\nEMAIL: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
                   .format(person.applicant_id,
-                          person.name,
+                          person.first_name,
+                          person.last_name,
+                          person.email,
                           person.application_date.year,
                           person.application_date.month,
                           person.application_date.day,
@@ -184,33 +193,38 @@ class applicant_methods:
                 school_name = "None"
                 if person.school is not None:
                     school_name = person.school.name
-                print("\nAPPLICANT ID: {}\nNAME: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
+                print("\nAPPLICANT ID: {}\nFIRST NAME: {}\nLAST NAME: {}\nEMAIL: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
                       .format(person.applicant_id,
-                              person.name,
-                              person.application_date.year,
-                              person.application_date.month,
-                              person.application_date.day,
-                              person.city,
-                              person.status,
-                              school_name))
-        except DataError:
-            print("Invalid format")
-
-    def filter_by_mentor(string):
-        applicants = Applicant.select(Applicant.applicant_id, Applicant.name, Applicant.city,
-                                      Applicant.status, Applicant.school, Mentor.school).\
-            join(Mentor, on=(Applicant.school == Mentor.school),
-                 join_type=JOIN.FULL).where(Mentor.name == string).naive()
-
-        for person in applicants:
-            print("\nAPPLICANT ID: {}\nNAME: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\n"
-                  .format(person.applicant_id,
-                          person.name,
+                          person.first_name,
+                          person.last_name,
+                          person.email,
                           person.application_date.year,
                           person.application_date.month,
                           person.application_date.day,
                           person.city,
-                          person.status))
+                          person.status,
+                          school_name))
+        except DataError:
+            print("Invalid format")
+
+    def filter_by_mentor(string):
+        applicants = Applicant.select(Applicant.applicant_id, Applicant.first_name, Applicant.last_name, Applicant.city,
+                                      Applicant.status, Applicant.school, Mentor.school). \
+            join(Mentor, on=(Applicant.school == Mentor.school),
+                 join_type=JOIN.FULL).where(Mentor.name == string).naive()
+
+        for person in applicants:
+            print("\nAPPLICANT ID: {}\nFIRST NAME: {}\nLAST NAME: {}\nEMAIL: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
+                  .format(person.applicant_id,
+                          person.first_name,
+                          person.last_name,
+                          person.email,
+                          person.application_date.year,
+                          person.application_date.month,
+                          person.application_date.day,
+                          person.city,
+                          person.status,
+                          school_name))
 
     """ APPLICANT MENU VIEW - FUNCTIONS """
 
@@ -222,9 +236,10 @@ class applicant_methods:
             school_name = "None"
             if person.school is not None:
                 school_name = person.school.name
-            print("\nAPPLICANT ID: {}\nNAME: {}\nSTATUS: {}\nSCHOOL:{}\n"
+            print("\nAPPLICANT ID: {}\nFIRST NAME: {}\nLAST NAME: {}\nSTATUS: {}\nSCHOOL:{}\n"
                   .format(person.applicant_id,
-                          person.name,
+                          person.first_name,
+                          person.last_name,
                           person.status,
                           school_name))
 
@@ -236,9 +251,11 @@ class applicant_methods:
             school_name = "None"
             if person.school is not None:
                 school_name = person.school.name
-            print("\nAPPLICANT ID: {}\nNAME: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
+            print("\nAPPLICANT ID: {}\nFIRST NAME: {}\nLAST NAME: {}\nEMAIL: {}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
                   .format(person.applicant_id,
-                          person.name,
+                          person.first_name,
+                          person.last_name,
+                          person.email,
                           person.application_date.year,
                           person.application_date.month,
                           person.application_date.day,
