@@ -25,5 +25,5 @@ class new_applicants:
 
         Applicant.create(applicant_id=id, first_name =first_name, last_name=last_name, email=email, status='new', city=city, school = school)
         print("\nNew applicant --{} {}-- created\n".format(first_name,last_name))
-        print(Applicant.applicant_id,Applicant.first_name,Applicant.email,Applicant.school)
+
 

@@ -67,7 +67,7 @@ class applicant_methods:
         for item in query:
             # print(item.applicant_id,item.school_id)
             Applicant.update(school=item.school_id) \
-                .where((Applicant.id == item.applicant_id) | (Applicant.school.is_null(True))) \
+                .where((Applicant.id == item.applicant_id) & (Applicant.school.is_null(True))) \
                 .execute()
 
 
