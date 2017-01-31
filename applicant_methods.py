@@ -3,7 +3,6 @@ import string
 
 from models import *
 import build
-import example_data
 
 
 class applicant_methods:
@@ -68,8 +67,9 @@ class applicant_methods:
         for item in query:
             # print(item.applicant_id,item.school_id)
             Applicant.update(school=item.school_id) \
-                .where((Applicant.id == item.applicant_id) & (Applicant.school.is_null(True))) \
+                .where((Applicant.id == item.applicant_id) | (Applicant.school.is_null(True))) \
                 .execute()
+
 
     def display_all_data():
         '''
@@ -106,7 +106,7 @@ class applicant_methods:
                           person.application_date.day,
                           person.city,
                           person.status,
-                          person.school_name))
+                          school_name))
 
     def filter_by_status(string):
         applicants = Applicant.select().where(Applicant.status == string).naive()

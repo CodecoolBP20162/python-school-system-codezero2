@@ -33,6 +33,7 @@ class Applicant(BaseModel):
     school = ForeignKeyField(School, related_name="applicants", null=True)
 
 
+
 class City(BaseModel):
     city_name = CharField()
     location = ForeignKeyField(School, related_name="location")
