@@ -146,7 +146,7 @@ def menu_loop():
 
 
 main_menu = OrderedDict([
-    (" n", "Generate new Applicant"),
+    (" n", "Register new Applicant"),
     (" a", "Administrator menu"),
     (" s", "Mentor menu"),
     (" d", "Applicant menu")
@@ -167,7 +167,6 @@ Admin_menu = OrderedDict([
 ])
 
 Applicant_menu = OrderedDict([
-    (" n", "Register as new applicant")
     (" a", "Check application status"),
     (" s", "View personal data")
 ])

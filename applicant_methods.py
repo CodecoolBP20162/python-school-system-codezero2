@@ -106,7 +106,7 @@ class applicant_methods:
                           person.application_date.day,
                           person.city,
                           person.status,
-                          school_name))
+                          person.school_name))
 
     def filter_by_status(string):
         applicants = Applicant.select().where(Applicant.status == string).naive()
@@ -125,7 +125,7 @@ class applicant_methods:
                           person.application_date.day,
                           person.city,
                           person.status,
-                          school_name))
+                          person.school_name))
 
     def filter_by_location(string):
         applicants = Applicant.select().where(Applicant.city == string)
@@ -144,7 +144,7 @@ class applicant_methods:
                           person.application_date.day,
                           person.city,
                           person.status,
-                          school_name))
+                          person.school_name))
 
     def filter_by_school(string):
         # applicants = Applicant.select().where(Applicant.school.name == string)
@@ -164,7 +164,7 @@ class applicant_methods:
                           person.application_date.day,
                           person.city,
                           person.status,
-                          school_name))
+                          person.school_name))
 
     def filter_by_name(string1, string2):
         applicants = Applicant.select().where(Applicant.first_name == string1, Applicant.last_name == string2)
@@ -183,7 +183,7 @@ class applicant_methods:
                           person.application_date.day,
                           person.city,
                           person.status,
-                          school_name))
+                          person.school_name))
 
     def filter_by_time(string):
         applicants = Applicant.select().where(Applicant.application_date == string)
@@ -203,7 +203,7 @@ class applicant_methods:
                           person.application_date.day,
                           person.city,
                           person.status,
-                          school_name))
+                          person.school_name))
         except DataError:
             print("Invalid format")
 
@@ -224,7 +224,7 @@ class applicant_methods:
                           person.application_date.day,
                           person.city,
                           person.status,
-                          school_name))
+                          person.school_name))
 
     """ APPLICANT MENU VIEW - FUNCTIONS """
 
@@ -241,7 +241,7 @@ class applicant_methods:
                           person.first_name,
                           person.last_name,
                           person.status,
-                          school_name))
+                          person.school_name))
 
     def check_personal_data():
         code = input("Please enter your application ID: ")
@@ -261,4 +261,4 @@ class applicant_methods:
                           person.application_date.day,
                           person.city,
                           person.status,
-                          school_name))
+                          person.school_name))
