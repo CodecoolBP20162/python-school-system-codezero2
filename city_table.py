@@ -1,6 +1,6 @@
 import models
 
-f = open('telepules_lista.csv', 'r')
+f = open('telepules_csv.csv', 'r')
 
 for i in f:
     line1 = i.split("\n")

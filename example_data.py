@@ -15,7 +15,7 @@ City.create(city_name='Debrecen',location=2)
 City.create(city_name='Warsaw',location=3)
 City.create(city_name='Budapest',location=1)"""
 
-f = open('telepules_lista.csv', 'r')
+f = open('telepules_csv.csv', 'r')
 
 for i in f:
     line1 = i.split("\n")

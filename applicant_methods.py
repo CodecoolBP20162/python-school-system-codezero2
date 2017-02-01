@@ -1,9 +1,9 @@
+from models import *
 import random
 import string
 
-from models import *
-import build
-
+from send_emails import *
+from interview_methods import *
 
 class applicant_methods:
     @classmethod
@@ -19,6 +19,7 @@ class applicant_methods:
             cls.generate_random()
         return generated
 
+    @staticmethod
     def get_all_applicant_id():
         id_list = []
         all_id = Applicant.select().where(Applicant.applicant_id.is_null(False))
@@ -26,6 +27,7 @@ class applicant_methods:
             id_list.append(item.applicant_id)
         return id_list
 
+    @staticmethod
     def get_applicants_without_id():
         id_list = []
         without_id = Applicant.select().where(Applicant.applicant_id.is_null(True))
@@ -33,11 +35,13 @@ class applicant_methods:
             id_list.append(item.id)
         return id_list
 
+    @staticmethod
     def show_applicants_without_id():
         applicant_list = get_applicants_without_id()
         for item in applicant_list:
             print(item)
 
+    @staticmethod
     def show_applicants_with_id():
         applicant_list = []
         all_id = Applicant.select().where(Applicant.applicant_id.is_null(False))
@@ -58,6 +62,52 @@ class applicant_methods:
             query.execute()
         print("done")
 
+    # REG__1__
+    @staticmethod
+    def register_data_inputs():
+        print("Please provide the following details!")
+        first_name = input('FIRST NAME: ')
+        last_name = input('LAST NAME: ')
+        email = input('EMAIL: ')
+        city_name = input('CITY: ')
+
+        return first_name, last_name, email, city_name
+
+    # REG__3__
+    @staticmethod
+    def assign_school_shorter(city_name):
+        get_location_id = City.select().where(City.city_name == city_name)
+        """
+        if len(get_location_id) > 1:
+            return get_location_id[0].location_id
+        else:
+        """
+        return get_location_id[0].location_id
+
+    # REG__4__
+    @staticmethod
+    def create_new_applicant(first_name, last_name, email, city_name, new_applicant_id, school_id):
+        Applicant.create(
+            applicant_id=new_applicant_id,
+            first_name=first_name,
+            last_name=last_name,
+            email=email, status='new',
+            city=city_name,
+            school=school_id
+        )
+
+    # REG__5__
+    @staticmethod
+    def assign_interview(new_applicant_id):
+        applicant = Applicant.select().join(Interview, join_type=JOIN_LEFT_OUTER).where(
+            Applicant.applicant_id == new_applicant_id).get()
+        slot = interview_methods.random_slot(applicant)
+        if slot is None:
+            print('There is no available interview slot for ', applicant.first_name, applicant.last_name)
+            return False
+        Interview.create(applicant=applicant.id, slot=slot.id)
+        InterviewSlot.update(reserved=True).where(InterviewSlot.id == slot.id).execute()
+
     def assign_school():
         query = Applicant. \
             select(Applicant.id.alias('applicant_id'), School.id.alias('school_id')) \
@@ -70,6 +120,32 @@ class applicant_methods:
                 .where((Applicant.id == item.applicant_id) & (Applicant.school.is_null(True))) \
                 .execute()
 
+
+    #### MAIN REGISTRATION PROCESS #####
+
+    @classmethod
+    def register_applicant_process(cls):
+        first_name, last_name, email, city_name = cls.register_data_inputs()
+        new_applicant_id = cls.generate_random()
+        school_id = cls.assign_school_shorter(city_name)
+        cls.create_new_applicant(first_name, last_name, email, city_name, new_applicant_id, school_id)
+        cls.assign_interview(new_applicant_id)
+        send_emails.email_applicant_with_reg_info(new_applicant_id)
+        send_emails.email_applicant_with_interview_info(new_applicant_id)
+        send_emails.email_mentor_with_interview_info(new_applicant_id)
+
+    @staticmethod
+    def assign_school_bulk():
+        query = Applicant. \
+            select(Applicant.id.alias('applicant_id'), School.id.alias('school_id')) \
+            .join(City, on=City.city_name == Applicant.city) \
+            .join(School) \
+            .naive()
+        for item in query:
+            print(item.applicant_id)
+            Applicant.update(school=item.school_id) \
+                .where((Applicant.applicant_id == item.applicant_id) & (Applicant.school.is_null(True))) \
+                .execute()
 
     def display_all_data():
         '''
@@ -125,7 +201,7 @@ class applicant_methods:
                           person.application_date.day,
                           person.city,
                           person.status,
-                          person.school_name))
+                          school_name))
 
     def filter_by_location(string):
         applicants = Applicant.select().where(Applicant.city == string)
@@ -144,7 +220,7 @@ class applicant_methods:
                           person.application_date.day,
                           person.city,
                           person.status,
-                          person.school_name))
+                          school_name))
 
     def filter_by_school(string):
         # applicants = Applicant.select().where(Applicant.school.name == string)
@@ -183,7 +259,7 @@ class applicant_methods:
                           person.application_date.day,
                           person.city,
                           person.status,
-                          person.school_name))
+                          school_name))
 
     def filter_by_time(string):
         applicants = Applicant.select().where(Applicant.application_date == string)
@@ -203,7 +279,7 @@ class applicant_methods:
                           person.application_date.day,
                           person.city,
                           person.status,
-                          person.school_name))
+                          school_name))
         except DataError:
             print("Invalid format")
 
@@ -241,7 +317,7 @@ class applicant_methods:
                           person.first_name,
                           person.last_name,
                           person.status,
-                          person.school_name))
+                          school_name))
 
     def check_personal_data():
         code = input("Please enter your application ID: ")
@@ -261,4 +337,4 @@ class applicant_methods:
                           person.application_date.day,
                           person.city,
                           person.status,
-                          person.school_name))
+                          school_name))

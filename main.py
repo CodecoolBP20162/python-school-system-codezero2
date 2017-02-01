@@ -8,7 +8,6 @@ from collections import OrderedDict
 import time
 import datetime
 
-
 # Write here your console application
 
 
@@ -139,7 +138,7 @@ def menu_loop():
             mentor_menu_loop()
         elif choice == "n":
             clear()
-            new_applicants.generate_applicant()
+            applicant_methods.register_applicant_process()
         elif choice == "d":
             clear()
             applicant_menu_loop()
