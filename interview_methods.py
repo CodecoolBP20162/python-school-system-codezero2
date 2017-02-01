@@ -1,5 +1,4 @@
 from models import *
-import example_data
 import random
 from print_table import *
 
@@ -29,8 +28,32 @@ class interview_methods:
             Interview.create(applicant=applicant.id, slot=slot.id)
             InterviewSlot.update(reserved=True).where(InterviewSlot.id == slot.id).execute()
 
+    @classmethod
+    def assign_second_mentor(cls,interview):
+        sub = InterviewSlot.select().join(Interview, join_type=JOIN_LEFT_OUTER).switch(InterviewSlot).join(
+            Mentor).where((InterviewSlot.start == interview.slot.start) & (InterviewSlot.reserved == False) & (
+            Mentor.school == interview.applicant.school))
+        if len(sub)==0:
+            print('Impossibru')
+        else:
+            slot = random.choice(sub)
+            Interview.update(slot_mentor2=slot.id).where(Interview.id == interview.id).execute()
+            InterviewSlot.update(reserved=True).where(InterviewSlot.id == slot.id).execute()
+
+
+    @classmethod
+    def assign_interview(cls, applicant):
+        slot = cls.random_slot(applicant)
+        if slot is None:
+            print('There is no available interview slot for ', applicant.first_name, applicant.last_name)
+            return False
+        Interview.create(applicant=applicant.id, slot=slot.id)
+        InterviewSlot.update(reserved=True).where(InterviewSlot.id == slot.id).execute()
+
+
     def display_all_interview():
-        sub = Mentor.select(Mentor.first_name, Mentor.last_name, Applicant.first_name.alias('app_name'), InterviewSlot, Mentor.school) \
+        sub = Mentor.select(Mentor.first_name, Mentor.last_name, Applicant.first_name.alias('app_name'), InterviewSlot,
+                            Mentor.school) \
             .join(School) \
             .switch(Mentor) \
             .join(InterviewSlot) \
@@ -40,9 +63,11 @@ class interview_methods:
 
         print_interview_table(sub)
 
+
     def filter_all_interview(filter):
         if type(filter) == Mentor:
-            sub = Mentor.select(Mentor.first_name, Mentor.last_name, Applicant.first_name.alias('app_name'), InterviewSlot, Mentor.school) \
+            sub = Mentor.select(Mentor.first_name, Mentor.last_name, Applicant.first_name.alias('app_name'), InterviewSlot,
+                                Mentor.school) \
                 .join(InterviewSlot) \
                 .join(Interview) \
                 .join(Applicant) \
@@ -50,7 +75,8 @@ class interview_methods:
                 .naive()
 
         elif type(filter) == Applicant:
-            sub = Mentor.select(Mentor.first_name, Mentor.last_name, Applicant.first_name.alias('app_name'), InterviewSlot, Mentor.school) \
+            sub = Mentor.select(Mentor.first_name, Mentor.last_name, Applicant.first_name.alias('app_name'), InterviewSlot,
+                                Mentor.school) \
                 .join(InterviewSlot) \
                 .join(Interview) \
                 .join(Applicant) \
@@ -58,14 +84,16 @@ class interview_methods:
                 .naive()
 
         elif type(filter) == School:
-            sub = Mentor.select(Mentor.first_name, Mentor.last_name, Applicant.first_name.alias('app_name'), InterviewSlot, Mentor.school) \
+            sub = Mentor.select(Mentor.first_name, Mentor.last_name, Applicant.first_name.alias('app_name'), InterviewSlot,
+                                Mentor.school) \
                 .join(InterviewSlot) \
                 .join(Interview) \
                 .join(Applicant) \
                 .where(Mentor.school == filter.id) \
                 .naive()
         else:
-            sub = Mentor.select(Mentor.first_name, Mentor.last_name, Applicant.first_name.alias('app_name'), InterviewSlot, Mentor.school) \
+            sub = Mentor.select(Mentor.first_name, Mentor.last_name, Applicant.first_name.alias('app_name'), InterviewSlot,
+                                Mentor.school) \
                 .join(InterviewSlot) \
                 .join(Interview) \
                 .join(Applicant) \
@@ -77,10 +105,12 @@ class interview_methods:
         else:
             print_interview_table(sub)
 
+
     @classmethod
     def filter_mentor(cls, number):
         mentor = Mentor.get(Mentor.id == number)
         cls.filter_all_interview(mentor)
+
 
     @classmethod
     def filter_school(cls, text):
@@ -91,9 +121,11 @@ class interview_methods:
             school = school[0]
             cls.filter_all_interview(school)
 
+
     @classmethod
     def filter_date(cls, date):
         cls.filter_all_interview(date)
+
 
     def select_applicant_wo_interview():
         sub = Applicant.select().join(Interview, join_type=JOIN_LEFT_OUTER).where(Interview.applicant == None)

@@ -1,11 +1,12 @@
 from peewee import *
-
+import random
 import datetime
+
 
 # Configure your database connection here
 # database name = should be your username on your laptop
 # database user = should be your username on your laptop
-db = PostgresqlDatabase('robertgaspar', user='robertgaspar')
+db = PostgresqlDatabase('atsidir', user='atsidir')
 
 
 # db = PostgresqlDatabase('schoolsystem', user='codezero',password='codezero',host='46.101.4.131')
@@ -33,7 +34,6 @@ class Applicant(BaseModel):
     school = ForeignKeyField(School, related_name="applicants", null=True)
 
 
-
 class City(BaseModel):
     city_name = CharField()
     location = ForeignKeyField(School, related_name="location")
@@ -54,11 +54,17 @@ class InterviewSlot(BaseModel):
 
     class Meta:
         indexes = (
-            # create a unique one from/to/date
             (('start', 'end', 'assigned_mentor'), True),
         )
 
 
 class Interview(BaseModel):
     applicant = ForeignKeyField(Applicant, related_name="interview")
-    slot = ForeignKeyField(InterviewSlot, related_name='interview')
+    slot = ForeignKeyField(InterviewSlot, related_name='interview', null=False)
+    slot_mentor2= ForeignKeyField(InterviewSlot, related_name='interview2',null=True)
+
+
+
+
+
+
