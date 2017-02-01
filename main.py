@@ -37,7 +37,10 @@ def mentor_menu_loop():
             clear()
             choice = input("Type mentor ID:").lower().strip()
             clear()
-            interview_methods.filter_mentor(int(choice))
+            try:
+                interview_methods.filter_mentor(int(choice))
+            except ValueError:
+                print("Invalid keyword")
 
         elif choice == "s":
             clear()
@@ -47,7 +50,10 @@ def mentor_menu_loop():
         elif choice == 'f':
             clear()
             choice = input("Which date do you want to know. Format YYYY-MM-DD: ")
-            interview_methods.filter_date(choice)
+            try:
+                interview_methods.filter_date(choice)
+            except DataError or InternalError:
+                print("Invalid format")
 
 
 def applicant_menu_loop():
@@ -107,15 +113,16 @@ def admin_menu_loop():
             applicant_methods.filter_by_school(string)
         elif choice == "l":
             clear()
-            string = input("Enter name: ")
-            applicant_methods.filter_by_name(string)
+            string = input("Enter first name: ")
+            string2 = input("Enger last name: ")
+            applicant_methods.filter_by_name(string, string2)
         elif choice == "m":
             clear()
             string = input("Enter date (YYYY-MM-DD): ")
             applicant_methods.filter_by_time(string)
         elif choice == "n":
             clear()
-            string = input("Enter mentor's name: ")
+            string = input("Enter mentor's first name: ")
             applicant_methods.filter_by_mentor(string)
 
 

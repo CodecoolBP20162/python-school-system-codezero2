@@ -282,7 +282,7 @@ class applicant_methods:
         applicants = Applicant.select(Applicant.applicant_id, Applicant.first_name, Applicant.last_name, Applicant.city,
                                       Applicant.status, Applicant.school, Mentor.school). \
             join(Mentor, on=(Applicant.school == Mentor.school),
-                 join_type=JOIN.FULL).where(Mentor.name == string).naive()
+                 join_type=JOIN.FULL).where(Mentor.first_name == string).naive()
 
         for person in applicants:
             print("\nAPPLICANT ID: {}\nFIRST NAME: {}\nLAST NAME: {}\nEMAIL: "
@@ -296,7 +296,7 @@ class applicant_methods:
                           person.application_date.day,
                           person.city,
                           person.status,
-                          person.school_name))
+                          person.school.name))
 
     """ APPLICANT MENU VIEW - FUNCTIONS """
 
