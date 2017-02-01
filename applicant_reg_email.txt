@@ -1,0 +1,12 @@
+Dear {} {},
+
+We are emailing you because you have applied to our programming course at Codecool
+Here are some details regarding your registration:
+
+Your application code: {}
+Your assigned school: {}
+
+You will receive another email with details about your application process shortly.
+
+Best Wishes
+Codecool
