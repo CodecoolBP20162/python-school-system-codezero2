@@ -6,7 +6,7 @@ import datetime
 # Configure your database connection here
 # database name = should be your username on your laptop
 # database user = should be your username on your laptop
-db = PostgresqlDatabase('robertgaspar', user='robertgaspar')
+db = PostgresqlDatabase('atsidir', user='atsidir')
 
 
 # db = PostgresqlDatabase('schoolsystem', user='codezero',password='codezero',host='46.101.4.131')

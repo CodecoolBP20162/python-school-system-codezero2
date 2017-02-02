@@ -8,6 +8,7 @@ from collections import OrderedDict
 import time
 import datetime
 
+
 # Write here your console application
 
 
@@ -68,7 +69,7 @@ def applicant_menu_loop():
 
         if choice == "n":
             clear()
-            #applicant_methods.register
+            # applicant_methods.register
         elif choice == "a":
             clear()
             applicant_methods.check_status()
@@ -99,6 +100,12 @@ def admin_menu_loop():
         elif choice == "t":
             clear()
             interview_methods.assign_interviews()
+        elif choice == "i":
+            clear()
+            interview_methods.display_all_interview()
+            intview_id = int(input("Enter the id of the interview which u want to add a second mentor "))
+            interview = Interview.get(id=intview_id)
+            interview_methods.assign_second_mentor(interview)
         elif choice == "h":
             clear()
             string = input("Enter status (new/approved): ")
@@ -163,6 +170,7 @@ Admin_menu = OrderedDict([
     (" a", "Display all applicants"),
     (" f", "Assign ID to new applicants"),
     (" t", "Assign interview to new applicants"),
+    (" i", "Assign second mentor to an interview"),
     (" g", "Assign SCHOOL to new applicants"),
     (" h", "Filter Applicants by status"),
     (" j", "Filter Applicants by location"),

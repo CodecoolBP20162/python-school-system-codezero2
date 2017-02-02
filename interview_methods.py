@@ -52,15 +52,7 @@ class interview_methods:
 
     @staticmethod
     def display_all_interview():
-        sub = Mentor.select(Mentor.first_name, Mentor.last_name, Applicant.first_name.alias('app_name'), InterviewSlot,
-                            Mentor.school) \
-            .join(School) \
-            .switch(Mentor) \
-            .join(InterviewSlot) \
-            .join(Interview) \
-            .join(Applicant) \
-            .naive()
-
+        sub = Interview.select()
         print_interview_table(sub)
 
     @staticmethod
