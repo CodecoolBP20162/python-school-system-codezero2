@@ -75,6 +75,9 @@ def applicant_menu_loop():
         elif choice == "s":
             clear()
             applicant_methods.check_personal_data()
+        elif choice == "f":
+            clear()
+            applicant_methods.check_interview_details()
 
 
 def admin_menu_loop():
@@ -174,7 +177,8 @@ Admin_menu = OrderedDict([
 
 Applicant_menu = OrderedDict([
     (" a", "Check application status"),
-    (" s", "View personal data")
+    (" s", "View personal data"),
+    (" f", "View interview details")
 ])
 
 Mentor_menu = OrderedDict([

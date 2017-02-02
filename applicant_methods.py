@@ -337,3 +337,21 @@ class applicant_methods:
                           person.city,
                           person.status,
                           school_name))
+
+    @staticmethod
+    def check_interview_details():
+        code = input("Please enter your application ID: ")
+        applicants = Applicant.select().where(Applicant.applicant_id == code)
+
+        for person in applicants:
+            print("\nAPPLICANT ID: {}\nFIRST NAME: {}\nLAST NAME: {}\nSCHOOL: {}\nINTERVIEW: {}\nMENTOR: {} {}"
+                  .format(person.applicant_id,
+                          person.first_name,
+                          person.last_name,
+                          person.school.name,
+                          person.interview[0].slot.start,
+                          person.interview[0].slot.assigned_mentor.first_name,
+                          person.interview[0].slot.assigned_mentor.last_name))
+
+
+
