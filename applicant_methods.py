@@ -352,6 +352,3 @@ class applicant_methods:
                           person.interview[0].slot.start,
                           person.interview[0].slot.assigned_mentor.first_name,
                           person.interview[0].slot.assigned_mentor.last_name))
-
-
-
