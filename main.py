@@ -7,6 +7,8 @@ import os
 from collections import OrderedDict
 import time
 import datetime
+import peewee
+import psycopg2
 
 
 # Write here your console application
@@ -53,7 +55,7 @@ def mentor_menu_loop():
             choice = input("Which date do you want to know. Format YYYY-MM-DD: ")
             try:
                 interview_methods.filter_date(choice)
-            except DataError or InternalError:
+            except (psycopg2.DataError, psycopg2.InternalError, peewee.DataError, peewee.InternalError):
                 print("Invalid format")
 
 
@@ -106,9 +108,13 @@ def admin_menu_loop():
         elif choice == "i":
             clear()
             interview_methods.display_all_interview()
-            intview_id = int(input("Enter the id of the interview which u want to add a second mentor "))
-            interview = Interview.get(id=intview_id)
-            interview_methods.assign_second_mentor(interview)
+            try:
+                intview_id = int(input("Enter the id of the interview which u want to add a second mentor "))
+                interview = Interview.get(id=intview_id)
+                interview_methods.assign_second_mentor(interview)
+            except ValueError:
+                print("Invalid input")
+
         elif choice == "h":
             clear()
             string = input("Enter status (new/approved): ")
@@ -129,7 +135,10 @@ def admin_menu_loop():
         elif choice == "m":
             clear()
             string = input("Enter date (YYYY-MM-DD): ")
-            applicant_methods.filter_by_time(string)
+            try:
+                applicant_methods.filter_by_time(string)
+            except (psycopg2.DataError, psycopg2.InternalError, peewee.DataError, peewee.InternalError):
+                print("Invalid format")
         elif choice == "n":
             clear()
             string = input("Enter mentor's first name: ")

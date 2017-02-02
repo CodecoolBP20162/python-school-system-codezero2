@@ -1,6 +1,8 @@
 import string
 from send_emails import *
 from interview_methods import *
+import psycopg2
+import peewee
 
 
 class applicant_methods:
@@ -274,7 +276,7 @@ class applicant_methods:
                               person.city,
                               person.status,
                               school_name))
-        except DataError:
+        except (psycopg2.DataError, psycopg2.InternalError, peewee.DataError, peewee.InternalError):
             print("Invalid format")
 
     @staticmethod
