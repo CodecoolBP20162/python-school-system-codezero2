@@ -1,0 +1,12 @@
+Dear {} {},
+
+This is an automated message letting you know that a new applicant was assigned to you for a personal interview.
+Here are the details:
+
+Location: {}
+Applicant: {} {}
+Application Code: {}
+Interview starts at: {}
+
+Best Wishes
+Mr CC.Robot
