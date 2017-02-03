@@ -3,17 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-#Idea files
-.idea/workspace.xml
 
-
-#Unnecessary files
-.~lock.telep.csv#
-.~lock.telepules_lista.csv#
-new_applicants.py
-tryy.py
-
-
+#.idea files
+.idea/
 
 # C extensions
 *.so
