@@ -40,7 +40,7 @@ def print_applicant_table(table):
     print('\n', end="")
     print('-' * (sum_title(title_list_len) + len(title_list) * 7))
     for applicant in table:
-        print('|' + str(applicant.id).center(title_list_len[0] + 5) + "|", end="")
+        print('|' + str(applicant.applicant_id).center(title_list_len[0] + 5) + "|", end="")
         print('|' + applicant.first_name.center(title_list_len[1] + 5) + "|", end="")
         print('|' + applicant.last_name.center(title_list_len[2] + 5) + "|", end="")
         print('|' + applicant.email.center(title_list_len[3] + 5) + "|", end="")
