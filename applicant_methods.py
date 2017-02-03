@@ -149,6 +149,7 @@ class applicant_methods:
                 .where((Applicant.applicant_id == item.applicant_id) & (Applicant.school.is_null(True))) \
                 .execute()
 
+
     @staticmethod
     def display_all_data():
         applicants = Applicant.select()

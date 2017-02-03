@@ -22,7 +22,7 @@ class SendEmails:
             server.ehlo()
             server.starttls()
             server.login(cls.gmail_user, cls.gmail_pwd)
-            server.sendmail(cls.FROM, TO, message)
+            server.sendmail(cls.FROM, TO, message.encode("utf8"))
             server.close()
         except Exception:
             print("failed to send mail")
