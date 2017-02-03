@@ -4,8 +4,8 @@ __pycache__/
 *$py.class
 
 #Idea files
-.idea/
-*.xml
+.idea/workspace.xml
+
 
 #Unnecessary files
 .~lock.telep.csv#

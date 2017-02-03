@@ -1,6 +1,7 @@
 import string
 from send_emails import *
 from interview_methods import *
+from print_table import *
 import psycopg2
 import peewee
 
@@ -153,23 +154,7 @@ class applicant_methods:
     @staticmethod
     def display_all_data():
         applicants = Applicant.select()
-
-        for person in applicants:
-            school_name = "None"
-            if person.school is not None:
-                school_name = person.school.name
-            print("\nAPPLICANT ID: {}\nFIRST NAME: {}\nLAST NAME: {}\nEMAIL: "
-                  "{}\nAPPLIED ON: {}-{}-{}\nCITY: {}\nSTATUS: {}\nSCHOOL: {}\n"
-                  .format(person.applicant_id,
-                          person.first_name,
-                          person.last_name,
-                          person.email,
-                          person.application_date.year,
-                          person.application_date.month,
-                          person.application_date.day,
-                          person.city,
-                          person.status,
-                          school_name))
+        print_applicant_table(applicants)
 
     @staticmethod
     def filter_by_status(string):
