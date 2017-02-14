@@ -139,13 +139,10 @@ def login():
 def register():
     form2 = forms.RegisterForm()
     if request.method == "POST" and form2.validate_on_submit():
-        if form2.validate_on_submit():
-            flash("You have successfully registered", "success")
-            create_user(form2)
-            return redirect(url_for("login"))
-        else:
-            flash("Invalid data, please try again", "success")
-            return redirect(url_for("register"))
+        flash("You have successfully registered", "success")
+        create_user(form2)
+        return redirect(url_for("login"))
+    flash("something's not right")
     return render_template("register2.html", form2=form2)
 
 

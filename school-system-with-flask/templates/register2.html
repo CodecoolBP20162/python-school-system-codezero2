@@ -16,19 +16,17 @@
 				<div class="logo"><img width="40px;" src="https://codezero.nobrainers.io/static/images/codeZeroLogo-copy.png"></div>
 			</div>
 		</div>
-		{% with messages = get_flashed_messages() %}
-          {% if messages %}
-            <ul class=flashes>
-            {% for message in messages %}
-              <li>{{ message }}</li>
-            {% endfor %}
-            </ul>
-          {% endif %}
-        {% endwith %}
 		<div class="login_container">
 			<div class="login_div">
 				
 				{% macro render_field(field) %}
+					<div class="field" style="position: absolute; transform: translateX(-150px); width: 150px;">
+						{% if field.errors %}
+							{% for error in field.errors %}
+								<div class="notification_error">{{ error }}</div>
+							{% endfor %}
+						{% endif %}
+					</div>
 					{{ field(**kwargs)|safe }}
 				{% endmacro %}
 				<!-- ##### REGISTER LEFT ##### -->  <!-- ##### REGISTER LEFT ##### -->
