@@ -67,3 +67,11 @@ class InterviewSlot(BaseModel):
 class Interview(BaseModel):
     applicant = ForeignKeyField(Applicant, related_name="interview")
     slot = ForeignKeyField(InterviewSlot, related_name='interview')
+
+class Email(BaseModel):
+    subject = CharField()
+    preview = CharField()
+    type = CharField()
+    sent_date = DateTimeField(default=datetime.datetime.now().date())
+    recipient_name = CharField()
+    recipient_email = CharField()
