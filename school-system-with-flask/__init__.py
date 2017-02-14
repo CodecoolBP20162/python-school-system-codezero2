@@ -178,10 +178,13 @@ def homepage():
         return redirect(url_for(url, query=query))
 
 """LIST ALL EMAILS SENT"""
-#@app.route('/admin/emails', methods=["GET", "POST"])
-#def list_emails():
- #   if current_user.role != 'admin':
-  #      abort(404)
+@app.route('/admin/emails', methods=["GET", "POST"])
+def list_emails():
+    if current_user.role != 'admin':
+        abort(404)
+    #emails = Email.select()
+    form = forms.FilterApplicantForm()
+    return render_template('email.html', form = form)
 
 
 """LIST ALL INTERVIEWS"""
