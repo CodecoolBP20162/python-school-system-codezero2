@@ -2,12 +2,10 @@ from peewee import *
 from flask_login import UserMixin
 import datetime
 
-
 # Configure your database connection here
 # database name = should be your username on your laptop
 
-db = PostgresqlDatabase('schoolsystem', user='codezero',password='codezero',host='46.101.4.131')
-
+db = PostgresqlDatabase('schoolsystem', user='codezero', password='codezero', host='46.101.4.131')
 
 
 class BaseModel(Model):
@@ -25,6 +23,7 @@ class User(BaseModel, UserMixin):
     login = CharField()
     password = CharField()
     role = CharField()
+
 
 class Applicant(BaseModel):
     applicant_id = CharField(unique=True, null=True)
@@ -68,10 +67,13 @@ class Interview(BaseModel):
     applicant = ForeignKeyField(Applicant, related_name="interview")
     slot = ForeignKeyField(InterviewSlot, related_name='interview')
 
+
 class Email(BaseModel):
     subject = CharField()
     preview = CharField()
-    type = CharField()
+    email_type = CharField()
     sent_date = DateTimeField(default=datetime.datetime.now().date())
     recipient_name = CharField()
     recipient_email = CharField()
+
+#db.create_table(Email)

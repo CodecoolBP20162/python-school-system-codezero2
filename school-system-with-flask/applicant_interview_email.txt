@@ -1,0 +1,12 @@
+Dear {} {},
+
+We are inviting you for a personal interview here at Codecool
+Here are some information regarding the details:
+
+Location: {}
+Your interview starts at: {}
+You are assigned to our lovely mentor {} {}.
+
+We are looking forward to meet you in person!
+
+Codecool
