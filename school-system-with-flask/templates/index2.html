@@ -37,7 +37,7 @@
 					</form>
 				</div>
 				<div class="first_card">
-					<a href="#" id="applicant_menu">
+					<a href="{{ url_for('homepage') }}" id="applicant_menu">
 						<div class="menu_item">
 							<div>Applicants</div>
 							<button id="app_button" class="nr active">{{ list_length }}</button>
@@ -49,13 +49,13 @@
 							<button id="mentor_button" class="nr">{{ list_length2 }}</button>
 						</div>
 					</a>
-					<a href="#">
+					<a href="{{ url_for('list_emails') }}">
 						<div class="menu_item">
 							<div>Emails</div>
 							<button class="nr">10</button>
 						</div>
 					</a>
-					<a href="#">
+					<a href="{{ url_for('list_interviews') }}">
 						<div class="menu_item">
 							<div>Interviews</div>
 							<button class="nr">2</button>
@@ -115,41 +115,43 @@
 							<i class="fa fa-bars fa-2x" aria-hidden="true" id="{{ applicant.applicant_id }}"></i>
 						</div>
 					</div>
-					<div class="details_container hide_details" id="hidden-{{ applicant.applicant_id }}">
-						<div class="stats_container">
-							<div class="stats_div">
-								<div class="stat_circle"><span>79%</span></div>		
-								<div class="stat_title"><span>Logic</span></div>		
+					<div class="hidden_container" id="hidden-{{ applicant.applicant_id }}">
+						<div class="details_container">
+							<div class="stats_container">
+								<div class="stats_div">
+									<div class="stat_circle"><span>79%</span></div>		
+									<div class="stat_title"><span>Logic</span></div>		
+								</div>
+								<div class="stats_div">
+									<div class="stat_circle"><span>49%</span></div>		
+									<div class="stat_title"><span>English</span></div>		
+								</div>
+								<div class="stats_div">
+									<div class="stat_circle"><span>99%</span></div>		
+									<div class="stat_title"><span>Interview</span></div>		
+								</div>
 							</div>
-							<div class="stats_div">
-								<div class="stat_circle"><span>49%</span></div>		
-								<div class="stat_title"><span>English</span></div>		
+							<div class="chart_container">
+								<div class="chart_div">
+									<img src="{{ url_for('static', filename='images/radar.png') }}">
+								</div>
 							</div>
-							<div class="stats_div">
-								<div class="stat_circle"><span>99%</span></div>		
-								<div class="stat_title"><span>Interview</span></div>		
-							</div>
-						</div>
-						<div class="chart_container">
-							<div class="chart_div">
-								<img src="{{ url_for('static', filename='images/radar.png') }}">
-							</div>
-						</div>
-						<div class="update_container">
-							<div class="update_div">
-								{% macro render_field(field) %}
-									{{ field(**kwargs)|safe }}
-								{% endmacro %}
-								<form method="POST">
-									{{ update_form.hidden_tag() }}
-									<div class="update_item">
-									<label for="update_email" style="font-size: 0.8em;">Email:</label>
-									{{ render_field(update_form.email, id="update_email", value=applicant.email) }}
-									</div>
-									<div class="update_item">
-									<input type="submit" name="" value="update email">
-									</div>
-								</form>
+							<div class="update_container">
+								<div class="update_div">
+									{% macro render_field(field) %}
+										{{ field(**kwargs)|safe }}
+									{% endmacro %}
+									<form method="POST">
+										{{ update_form.hidden_tag() }}
+										<div class="update_item">
+										<label for="update_email" style="font-size: 0.8em;">Email:</label>
+										{{ render_field(update_form.email, id="update_email", value=applicant.email) }}
+										</div>
+										<div class="update_item">
+										<input type="submit" name="" value="update email">
+										</div>
+									</form>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -215,11 +217,17 @@
 			$("#app_button").addClass("active");
 		});
 	</script>
-	
+	<!--
 	<script type="text/javascript">
 		$(".fa-bars").click(function(){
 			$("#hidden-"+this.id).toggleClass("show_details");
 		});
 	</script>
+	-->
+	<script type="text/javascript">
+		$(".fa-bars").click(function(){
+	    	$("#hidden-"+this.id).slideToggle();
+		});
+</script>
 </body>
 </html>
