@@ -37,25 +37,25 @@
 					</form>
 				</div>
 				<div class="first_card">
-					<a href="#" id="applicant_menu">
+					<a href="{{ url_for('homepage') }}" id="applicant_menu">
 						<div class="menu_item">
 							<div>Applicants</div>
-							<button id="app_button" class="nr active">{{ list_length }}</button>
+							<button id="app_button" class="nr active"></button>
 						</div>
 					</a>
 					<a href="#" id="mentor_menu">
 						<div class="menu_item">
 							<div>Mentors</div>
-							<button id="mentor_button" class="nr">{{ list_length2 }}</button>
+							<button id="mentor_button" class="nr"></button>
 						</div>
 					</a>
-					<a href="#">
+					<a href="{{ url_for('list_emails') }}">
 						<div class="menu_item">
 							<div>Emails</div>
 							<button class="nr">10</button>
 						</div>
 					</a>
-					<a href="#">
+					<a href="{{ url_for('list_interviews') }}">
 						<div class="menu_item">
 							<div>Interviews</div>
 							<button class="nr">2</button>
@@ -77,58 +77,23 @@
 				<!-- #### INTERVIEW TABLE #### -->  <!-- #### INTERVIEW TABLE #### -->
 				<div class="table_container show" id="applicants">
 					<div class="table_header">
-						<div class="header_cell1">School</div>
-						<div class="header_cell2">Application Code</div>
-						<div class="header_cell3">Applicant Name</div>
-						<div class="header_cell4">Mentor</div>
-						<div class="header_cell5">Date</div>
-                        <div class="header_cell5">Recipient Email</div>
+						<div class="header_cell1">Interview start</div>
+						<div class="header_cell2">Interview end</div>
+						<div class="header_cell3">Assigned Mentor</div>
+						<div class="header_cell4">Applicant</div>
+						<div class="header_cell5">Location</div>
 					</div>
 					<!-- #### TABLE ROW #### -->  <!-- #### TABLE ROW #### -->  <!-- #### TABLE ROW #### -->
-					{% for applicant in Applicants %}
+					{% for interview in interviews %}
 					<div class="table_row">
-						<div class="table_cell1">Budapest</div>
-						<div class="table_cell2">sdf34k</div>
-						<div class="table_cell3">Nap Pali</div>
-						<div class="table_cell4">Matyi</div>
-						<div class="table_cell5">02-22-</div>
-						<div class="table_cell6">nappali@freemail.hu</div>
-					</div>
-
-				</div>
-
-				<!-- #### MENTOR TABLE #### -->  <!-- #### MENTOR TABLE #### -->
-				<div class="table_container fade" id="mentors">
-					<div class="table_header">
-						<div class="header_cell1">Mentor</div>
-						<div class="header_cell2">Mentor ID</div>
-						<div class="header_cell3">School</div>
-						<div class="header_cell4">Status</div>
-						<div class="header_cell5">Interview</div>
-						<div class="header_cell6">...</div>
-					</div>
-					<!-- #### TABLE ROW #### -->  <!-- #### TABLE ROW #### -->  <!-- #### TABLE ROW #### -->
-					{% for mentor in Mentors %}
-					<div class="table_row">
-						<div class="table_cell1">
-							<div class="avatar">
-								<i class="fa fa-user fa-2x fa-border" aria-hidden="true"></i>
-							</div>
-							<div class="name_email">
-								<div class="name">{{ mentor.first_name }} {{ mentor.last_name }}</div>
-								<div class="email">{{ mentor.email }}</div>
-							</div>
-						</div>
-						<div class="table_cell2">{{ mentor.id }}</div>
-						<div class="table_cell3">{{ mentor.school.name }}</div>
-						<div class="table_cell4"><span class="rejected">{{ mentor.school.name }}</span></div>
-						<div class="table_cell5">{{ mentor.first_name}}</div>
-						<div class="table_cell6">
-							<a href="{{ url_for('delete_applicant', app_id = mentor.id) }}"><i class="fa fa-trash-o fa-2x" style="" aria-hidden="true"></i></a>
-							<i class="fa fa-bars fa-2x" aria-hidden="true"></i>
-						</div>
+						<div class="table_cell1">{{ interview.slot.start }}</div>
+						<div class="table_cell2">{{ interview.slot.end }}</div>
+						<div class="table_cell3">{{ interview.slot.assigned_mentor.first_name }} {{ interview.slot.assigned_mentor.last_name }}</div>
+						<div class="table_cell4">{{ interview.applicant.first_name }} {{ interview.applicant.last_name }}</div>
+						<div class="table_cell5">{{ interview.applicant.school.name }}</div>
 					</div>
 					{% endfor %}
+
 				</div>
 
 			</div>
@@ -136,27 +101,6 @@
 		</div>
 		<!-- ##### END APP CONTAINER ##### -->
 	</div>
-	<script type="text/javascript">
-		$("#mentor_menu").click(function(){
-			$("#applicants").removeClass("show");
-			$("#applicants").addClass("fade");
-			$("#mentors").removeClass("fade");
-			$("#mentors").addClass("show");
-			$("#app_button").removeClass("active");
-			$("#mentor_button").addClass("active");
-		});
-	</script>
-	<script type="text/javascript">
-		$("#applicant_menu").click(function(){
-			$("#mentors").removeClass("show");
-			$("#mentors").addClass("fade");
-			$("#applicants").removeClass("fade");
-			$("#applicants").addClass("show");
-			$("#mentor_button").removeClass("active");
-			$("#app_button").addClass("active");
-		});
-	</script>
-
 	<script type="text/javascript">
 		$(".fa-bars").click(function(){
 			$("#hidden-"+this.id).toggleClass("show_details");
