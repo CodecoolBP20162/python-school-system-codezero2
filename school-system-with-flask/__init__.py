@@ -121,7 +121,7 @@ def login():
         elif current_user.role == 'applicant':
             return redirect(url_for('user_page'))
         elif current_user.role == 'mentor':
-            return redirect(url_for('mentor_page'))
+            return redirect(url_for('abort'))
         else:
             return redirect(url_for('user_page'))
     elif request.method == "POST" and form2.validate_on_submit():
@@ -142,7 +142,6 @@ def register():
         flash("You have successfully registered", "success")
         create_user(form2)
         return redirect(url_for("login"))
-    flash("something's not right")
     return render_template("register2.html", form2=form2)
 
 
@@ -153,7 +152,7 @@ def register():
 @login_required
 def homepage():
     if current_user.role != 'admin':
-        abort(404)
+        return redirect(url_for('abort'))
     Applicants = Applicant.select()
     Mentors = Mentor.select()
     list_length = int(len(Applicants))
@@ -188,6 +187,16 @@ def list_emails():
 
 
 
+"""LIST ALL INTERVIEWS"""
+@app.route('/admin/interviews', methods=["GET", "POST"])
+def list_interviews():
+    if current_user.role != 'admin':
+        abort(404)
+    interviews = Interview.select().join(InterviewSlot).switch().join(Applicant)
+    form = forms.FilterApplicantForm()
+    return render_template('interview.html', form=form, interviews=interviews)
+
+
 
 """ FILTER APPLICANTS BY FIRST NAME """
 
@@ -202,6 +211,7 @@ def filter_by_first_name(query):
     list_length = int(len(Applicants))
     list_length2 = int(len(Mentors))
     form = forms.FilterApplicantForm()
+    update_form = forms.UpdateApplicantForm()
     if request.method == "GET":
         return render_template(
                                 "index2.html",
@@ -209,7 +219,8 @@ def filter_by_first_name(query):
                                 Mentors=Mentors,
                                 list_length=list_length,
                                 list_length2=list_length2,
-                                form=form
+                                form=form,
+                                update_form=update_form
                                 )
     
     elif request.method == "POST" and form.validate_on_submit():
@@ -230,6 +241,7 @@ def filter_by_last_name(query):
     list_length = int(len(Applicants))
     list_length2 = int(len(Mentors))
     form = forms.FilterApplicantForm()
+    update_form = forms.UpdateApplicantForm()
     if request.method == "GET":
         return render_template(
                                 "index2.html",
@@ -237,7 +249,8 @@ def filter_by_last_name(query):
                                 Mentors=Mentors,
                                 list_length=list_length,
                                 list_length2=list_length2,
-                                form=form
+                                form=form,
+                                update_form=update_form
                                 )
     
     elif request.method == "POST" and form.validate_on_submit():
@@ -253,11 +266,12 @@ def filter_by_last_name(query):
 def filter_by_school(query):
     if current_user.role != 'admin':
         abort(404)
-    Applicants = Applicant.select().where(Applicant.school.name.contains(query))
+    Applicants = Applicant.select().join(School).where(School.name.contains(query))
     Mentors = Mentor.select()
     list_length = int(len(Applicants))
     list_length2 = int(len(Mentors))
     form = forms.FilterApplicantForm()
+    update_form = forms.UpdateApplicantForm()
     if request.method == "GET":
         return render_template(
                                 "index2.html",
@@ -265,7 +279,8 @@ def filter_by_school(query):
                                 Mentors=Mentors,
                                 list_length=list_length,
                                 list_length2=list_length2,
-                                form=form
+                                form=form,
+                                update_form = forms.UpdateApplicantForm()
                                 )
     
     elif request.method == "POST" and form.validate_on_submit():
@@ -286,6 +301,7 @@ def filter_by_status(query):
     list_length = int(len(Applicants))
     list_length2 = int(len(Mentors))
     form = forms.FilterApplicantForm()
+    update_form = forms.UpdateApplicantForm()
     if request.method == "GET":
         return render_template(
                                 "index2.html",
@@ -293,7 +309,8 @@ def filter_by_status(query):
                                 Mentors=Mentors,
                                 list_length=list_length,
                                 list_length2=list_length2,
-                                form=form
+                                form=form,
+                                update_form=update_form
                                 )
 
     elif request.method == "POST" and form.validate_on_submit():
@@ -378,10 +395,10 @@ def interview():
     if request.method == "GET":
         return render_template("interviews.html", interviews=interviews, list_length=list_length, class_list=class_list)
 
-@app.route('/try', methods=["GET", "POST"])
-def tryy():
+@app.route('/abort', methods=["GET", "POST"])
+def abort():
     if request.method == "GET":
-        return render_template("try.html")
+        return render_template("abort.html")
 
 
 if __name__ == "__main__":
