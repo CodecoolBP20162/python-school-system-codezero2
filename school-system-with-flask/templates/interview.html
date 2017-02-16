@@ -40,25 +40,25 @@
 					<a href="{{ url_for('homepage') }}" id="applicant_menu">
 						<div class="menu_item">
 							<div>Applicants</div>
-							<button id="app_button" class="nr active"></button>
+							<button id="app_button" class="nr">{{ len_applicants }}</button>
 						</div>
 					</a>
 					<a href="#" id="mentor_menu">
 						<div class="menu_item">
 							<div>Mentors</div>
-							<button id="mentor_button" class="nr"></button>
+							<button id="mentor_button" class="nr">{{ len_mentors }}</button>
 						</div>
 					</a>
 					<a href="{{ url_for('list_emails') }}">
 						<div class="menu_item">
 							<div>Emails</div>
-							<button class="nr">10</button>
+							<button class="nr">{{ len_emails }}</button>
 						</div>
 					</a>
 					<a href="{{ url_for('list_interviews') }}">
 						<div class="menu_item">
 							<div>Interviews</div>
-							<button class="nr">2</button>
+							<button class="nr active">{{ len_interviews }}</button>
 						</div>
 					</a>
 				</div>
