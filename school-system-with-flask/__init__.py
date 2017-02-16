@@ -7,6 +7,7 @@ from email_methods import *
 import forms
 import pushover
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
+from flask_bcrypt import check_password_hash
 
 try:
     from forms import *
@@ -49,8 +50,8 @@ def user_list():
     return array
 
 
-def create_user(form):
-    user = User.create(login=form.login.data, password=form.password.data, role='applicant')
+def create_new_user(form):
+    user = User.create_user(login=form.login.data, password=form.password.data)
     applicant = Applicant.create(first_name=form.first_name.data, last_name=form.last_name.data, email=form.email.data,
                                  city=str(form.city.data).lower(), user=user.id)
 
@@ -87,11 +88,18 @@ def filter_redirect(choice, query):
     elif choice == "status":
         return "filter_by_status"
 
+def count_menu_items():
+    num_of_applicants = int(len(Applicant.select()))
+    num_of_interviews = int(len(Interview.select()))
+    num_of_emails = int(len(Email.select()))
+    num_of_mentors = int(len(Mentor.select()))
+    return num_of_applicants, num_of_mentors, num_of_emails, num_of_interviews
+    
+
+
 
 app = Flask(__name__)
 app.secret_key = 'aosjndajndjansdojnasd.asdadas.d.d.1'
-
-class_list = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"]
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -107,7 +115,13 @@ def load_user(user_id):
 
 
 """ LOGIN - INDEX PAGE"""
-
+@app.route('/assign_interview', methods=["GET", "POST"])
+@login_required
+def assgn():
+    applicants = Applicant.select()
+    for applicant in applicants:
+        interview_methods.assign_interview(applicant)
+    return redirect(url_for('homepage'))
 
 @app.route('/', methods=["GET", "POST"])
 def login():
@@ -123,6 +137,8 @@ def login():
             flash('Invalid username or password.')
             return render_template('login.html', form=form, form2=form2)
         if user.password == form.password.data:
+            login_user(user)
+        elif check_password_hash(user.password, form.password.data):
             login_user(user)
         else:
             flash('Invalid password.')
@@ -141,14 +157,6 @@ def login():
             return redirect(url_for('abort'))
         else:
             return redirect(url_for('user_page'))
-    elif request.method == "POST" and form2.validate_on_submit():
-        if form2.validate_on_submit():
-            flash("You have successfully registered", "success")
-            create_user(form2)
-            return redirect(url_for("login"))
-        else:
-            flash("Invalid data, please try again", "success")
-            return redirect(url_for("login"))
     return render_template("login.html", form=form, form2=form2)
 
 
@@ -176,23 +184,33 @@ def homepage():
     list_length = int(len(Applicants))
     list_length2 = int(len(Mentors))
     form = forms.FilterApplicantForm()
-    update_form = forms.UpdateApplicantForm()
     if request.method == "GET":
         return render_template(
-            "index2.html",
-            form=form,
-            update_form=update_form,
-            Applicants=Applicants,
-            Mentors=Mentors,
-            list_length=list_length,
-            list_length2=list_length2
-        )
+                                "index2.html",
+                                form=form,
+                                Applicants=Applicants,
+                                Mentors=Mentors,
+                                list_length=list_length,
+                                list_length2=list_length2
+                                )
 
-    elif request.method == "POST" and form.validate_on_submit():
-        query = request.form.get('name')
-        choice = request.form.get('options')
-        url = filter_redirect(choice, query)
-        return redirect(url_for(url, query=query))
+    elif request.method == "POST":
+        if request.form.get('update_form'):
+            app_id = request.form.get('update_form_applicant_id')
+            new_email = request.form.get('update_email')
+            new_school = request.form.get('update_school')
+            new_status = request.form.get('update_status')
+            applicant = Applicant.select().where(Applicant.applicant_id == app_id).get()
+            applicant.email = new_email
+            applicant.school.name = new_school
+            applicant.status = new_status
+            applicant.save()
+            return redirect(url_for('homepage'))
+        elif form.validate_on_submit():
+            query = request.form.get('name')
+            choice = request.form.get('options')
+            url = filter_redirect(choice, query)
+            return redirect(url_for(url, query=query))
 
 
 """LIST ALL EMAILS SENT"""
@@ -318,7 +336,8 @@ def filter_by_school(query):
         return redirect(url_for(url, query=query))
 
 
-""" FILTER APPLICANTS BY FIRST STATUS """
+
+""" FILTER APPLICANTS BY STATUS """
 
 
 @app.route('/filter_by_status/<query>', methods=["GET", "POST"])
@@ -409,7 +428,7 @@ def mentors():
     LISTA = mentor_methods.get_list()
     list_length = int(len(LISTA))
     if request.method == "GET":
-        return render_template("mentors.html", LISTA=LISTA, list_length=list_length, class_list=class_list)
+        return render_template("mentors.html", LISTA=LISTA, list_length=list_length)
 
 
 @app.route('/users', methods=["GET", "POST"])
@@ -418,7 +437,7 @@ def users():
     LISTA = user_list()
     list_length = int(len(LISTA))
     if request.method == "GET":
-        return render_template("users.html", LISTA=LISTA, list_length=list_length, class_list=class_list)
+        return render_template("users.html", LISTA=LISTA, list_length=list_length)
 
 
 @app.route('/interview', methods=["GET", "POST"])
@@ -427,7 +446,7 @@ def interview():
     interviews = interview_methods.get_interviews()
     list_length = int(len(interviews))
     if request.method == "GET":
-        return render_template("interviews.html", interviews=interviews, list_length=list_length, class_list=class_list)
+        return render_template("interviews.html", interviews=interviews, list_length=list_length)
 
 
 @app.route('/abort', methods=["GET", "POST"])

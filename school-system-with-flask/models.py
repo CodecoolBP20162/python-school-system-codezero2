@@ -1,5 +1,6 @@
 from peewee import *
 from flask_login import UserMixin
+from flask_bcrypt import generate_password_hash
 import datetime
 
 # Configure your database connection here
@@ -22,7 +23,13 @@ class School(BaseModel):
 class User(BaseModel, UserMixin):
     login = CharField()
     password = CharField()
-    role = CharField()
+    role = CharField(default="applicant")
+
+    @classmethod
+    def create_user(cls, login, password):
+        user = cls.create(login=login, password=generate_password_hash(password))
+        return user
+
 
 
 class Applicant(BaseModel):
@@ -35,6 +42,9 @@ class Applicant(BaseModel):
     status = CharField(default="applied")
     school = ForeignKeyField(School, related_name="applicants", null=True)
     user = ForeignKeyField(User, related_name='applicant', unique=True, null=False)
+
+    class Meta:
+        order_by = ('first_name', 'last_name', 'application_date')
 
 
 class City(BaseModel):
@@ -76,3 +86,30 @@ class Email(BaseModel):
     recipient_name = CharField()
     recipient_email = CharField(null=True)
 
+#db.create_table(Email)
+
+'''
+for i in range(1, 3):
+    InterviewSlot.create(start='2017-03-0{} 11:00'.format(i), end='2017-03-0{} 12:00'.format(i), reserved=False, assigned_mentor=3)
+
+for i in range(4, 10):
+    InterviewSlot.create(start='2017-03-0{} 11:00'.format(i), end='2017-03-0{} 12:00'.format(i), reserved=False, assigned_mentor=3)
+
+
+for i in range(10, 20):
+    InterviewSlot.create(start='2017-03-{} 11:00'.format(i), end='2017-03-{} 12:00'.format(i), reserved=False, assigned_mentor=5)
+
+for i in range(20, 30):
+    InterviewSlot.create(start='2017-03-{} 11:00'.format(i), end='2017-03-{} 12:00'.format(i), reserved=False, assigned_mentor=6)
+
+for i in range(1, 10):
+    InterviewSlot.create(start='2017-04-0{} 11:00'.format(i), end='2017-04-0{} 12:00'.format(i), reserved=False, assigned_mentor=3)
+
+
+for i in range(10, 20):
+    InterviewSlot.create(start='2017-04-{} 11:00'.format(i), end='2017-04-{} 12:00'.format(i), reserved=False, assigned_mentor=5)
+
+for i in range(20, 30):
+    InterviewSlot.create(start='2017-04-{} 11:00'.format(i), end='2017-04-{} 12:00'.format(i), reserved=False, assigned_mentor=6)
+
+'''

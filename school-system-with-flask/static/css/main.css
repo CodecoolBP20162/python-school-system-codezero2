@@ -87,6 +87,17 @@ a {
 	outline: none;
 }
 
+.select_input {
+	display: inline-block;
+    height: 30px;
+    width: 100%;
+    border: 1px solid #3e3c5a;
+    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    outline: none;
+}
+
 .search_card .select_input {
 	display: inline-block;
 	height: 30px;
@@ -185,6 +196,19 @@ a {
 	border-radius: 5px;
 	cursor: pointer;
 	transition: all 300ms;
+}
+
+.new_user_form {
+	margin-left: 20px;
+
+}
+
+.new_user_form input {
+	margin-right: 10px;
+	padding: 12px;
+	border: none;
+	border: 1px solid #3e3c5a;
+	border-radius: 3px;
 }
 
 .add_button:hover {
@@ -298,7 +322,7 @@ a {
 
 .name {
 	font-size: 1.1em;
-	color: #3e3c5a;
+	color: #C42E34;
 }
 
 .email {
@@ -400,6 +424,7 @@ a {
 }
 
 .login_div {
+	margin-top: -80px;
 	display: flex;
 	height: 400px;
 	width: 650px;
@@ -616,20 +641,6 @@ a {
 	font-weight: 400;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @keyframes fade {
 	0% {
 		opacity: 1;
@@ -687,13 +698,67 @@ a {
 
 
 
+@media (max-width: 900px) {
 
+  .table_cell5 { 
+  	display: none;
+  }
 
+  .table_cell2 {
+  	display: none;
+  }
 
+  .table_cell6 {
+  	flex: 1;
+  }
 
+  .header_cell5 {
+  	display: none;
+  }
+	
+  .header_cell2 {
+  	display: none;
+  }
 
+}
 
+@media (max-width: 730px) {
 
+	.app_container {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.right_cell {
+		width: 90%;
+		order: 1;
+	}
+
+	.left_cell {
+		order: 2;
+	}
+
+	.table_cell6 {
+  		width: auto;
+  		flex: 1;
+  }
+
+  	.chart_container {
+  		display: none; !important
+  	}
+
+}
+
+@media (max-width: 466px) {
+
+	.table_cell3 {
+		display: none;
+	}
+
+	.header_cell3 {
+		display: none;
+	}
+}
 
 
 
