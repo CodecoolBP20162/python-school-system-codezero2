@@ -45,7 +45,7 @@ class applicant_methods:
         for item in applicant_list:
             print(item)
 
-    # MAIN FUNCTION ##### checks, generates and assignes new applicant_ids
+    # MAIN FUNCTION ##### checks, generates and assigns new applicant_ids
 
     @classmethod
     def assign_id(cls):

@@ -7,11 +7,11 @@ except Exception:
     from models import *
 
 
-class Applicant_methods:
+class ApplicantMethods:
 
     @staticmethod
     def generate_random():
-        existing_ids = Applicant_methods.get_all_applicant_id()
+        existing_ids = ApplicantMethods.get_all_applicant_id()
         generated = ''
         generated += random.choice(string.ascii_lowercase)
         generated += random.choice(string.ascii_lowercase)
@@ -19,7 +19,7 @@ class Applicant_methods:
         generated += random.choice(string.ascii_uppercase)
         generated += random.choice(string.digits)
         if generated in existing_ids:
-            Applicant_methods.generate_random()
+            ApplicantMethods.generate_random()
         return generated
 
     @classmethod
@@ -44,6 +44,7 @@ class Applicant_methods:
         new_id = cls.generate_random()
         applicant.applicant_id = new_id
         applicant.save()
+        return new_id
 
     @classmethod
     def assign_school_to_applicant(cls, applicant):

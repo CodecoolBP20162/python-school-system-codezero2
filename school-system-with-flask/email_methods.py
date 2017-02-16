@@ -1,9 +1,15 @@
+from applicant_methods import *
 from models import *
 import smtplib
 import traceback
+from interview_methods import *
+import psycopg2
+import peewee
+
 
 
 class SendEmails:
+
     gmail_user = "codezerocc@gmail.com"
     gmail_pwd = "codecool"
     FROM = "codezerocc@gmail.com"
@@ -54,18 +60,18 @@ class SendEmails:
         TO, SUBJECT, TEXT, name = cls.get_applicant_reg_info(new_applicant_id)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s
         """ % (cls.FROM, ", ".join(TO), SUBJECT, TEXT)
-
+        cls.reg_email_sent(new_applicant_id)
         return TO, message
 
     @classmethod
-    def application_email_sent(cls, new_applicant_id):
-        recipient_email, subject, preview, name = cls.get_applicant_reg_info(new_applicant_id)
+    def reg_email_sent(cls, new_applicant_id):
+        recipient_email, subject, preview, recipient_name = cls.get_applicant_reg_info(new_applicant_id)
         Email.create(
-            subject=subject,
-            preview=preview[0:139],
-            email_type='Registration',
-            recipient_name=name,
-            recipient_email=recipient_email
+            subject = subject,
+            preview = preview[0:139],
+            email_type = "Registration",
+            recipient_name = recipient_name,
+            recipient_email = recipient_email
         )
 
     """ APPLICANT INTERVIEW EMAIL """
@@ -105,20 +111,20 @@ class SendEmails:
 
     @classmethod
     def prepare_applicant_interview_info(cls, new_applicant_id):
-        TO, SUBJECT, TEXT = cls.get_applicant_interview_info(new_applicant_id)
+        TO, SUBJECT, TEXT, name = cls.get_applicant_interview_info(new_applicant_id)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s
         """ % (cls.FROM, ", ".join(TO), SUBJECT, TEXT)
-
+        cls.app_interview_email_sent(new_applicant_id)
         return TO, message
 
     @classmethod
     def app_interview_email_sent(cls, new_applicant_id):
-        recipient_email, subject, preview, name = cls.get_applicant_interview_info(new_applicant_id)
+        recipient_email, subject, preview, recipient_name = cls.get_applicant_interview_info(new_applicant_id)
         Email.create(
             subject=subject,
             preview=preview[0:139],
-            email_type='Applicant Interview',
-            recipient_name=name,
+            email_type="Applicant Interview",
+            recipient_name=recipient_name,
             recipient_email=recipient_email
         )
 
@@ -163,19 +169,20 @@ class SendEmails:
 
     @classmethod
     def prepare_mentor_interview_info(cls, new_applicant_id):
-        TO, SUBJECT, TEXT = cls.get_mentor_interview_info(new_applicant_id)
+        TO, SUBJECT, TEXT, mentor_name = cls.get_mentor_interview_info(new_applicant_id)
         message = """From: %s\nTo: %s\nSubject: %s\n\n%s
             """ % (cls.FROM, ", ".join(TO), SUBJECT, TEXT)
-
+        cls.mentor_interview_email_sent(new_applicant_id)
         return TO, message
 
     @classmethod
     def mentor_interview_email_sent(cls, new_applicant_id):
-        recipient_email, subject, preview, mentor_name = cls.get_mentor_interview_info(new_applicant_id)
+        recipient_email, subject, preview, recipient_name = cls.get_mentor_interview_info(new_applicant_id)
         Email.create(
             subject=subject,
             preview=preview[0:139],
-            email_type='Mentor Interview',
-            recipient_name=mentor_name,
+            email_type="Mentor Interview",
+            recipient_name=recipient_name,
             recipient_email=recipient_email
         )
+

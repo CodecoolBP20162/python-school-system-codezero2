@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request, url_for, redirect, flash, abort
 from peewee import *
-import applicant_methods
+from applicant_methods import *
 import mentor_methods
 import interview_methods
+from email_methods import *
 import forms
 import pushover
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
@@ -53,22 +54,38 @@ def create_user(form):
     applicant = Applicant.create(first_name=form.first_name.data, last_name=form.last_name.data, email=form.email.data,
                                  city=str(form.city.data).lower(), user=user.id)
 
-    Applicant_methods.assign_id_to_applicant(applicant)
-    Applicant_methods.assign_school_to_applicant(applicant)
+    new_applicant_id = ApplicantMethods.assign_id_to_applicant(applicant)
+    ApplicantMethods.assign_school_to_applicant(applicant)
     interview_methods.assign_interview(applicant)
+
     msg = "{} {} just registered as an applicant! - codezero".format(applicant.first_name, applicant.last_name)
     pushover.send_pushover(msg)
+    return new_applicant_id
+
+
+def send_emails(new_applicant_id):
+
+    applicant_email, message = SendEmails.prepare_applicant_reg_info(new_applicant_id)
+    SendEmails.send_email(applicant_email, message)
+
+    applicant_email, message = SendEmails.prepare_applicant_interview_info(new_applicant_id)
+    SendEmails.send_email(applicant_email, message)
+
+    mentor_email, message = SendEmails.prepare_mentor_interview_info(new_applicant_id)
+    SendEmails.send_email(mentor_email, message)
+
+
 
 
 def filter_redirect(choice, query):
-            if choice == "last_name":
-                return "filter_by_last_name"
-            elif choice == "first_name":
-                return "filter_by_first_name"
-            elif choice == "school":
-                return "filter_by_school"
-            elif choice == "status":
-                return "filter_by_status"
+    if choice == "last_name":
+        return "filter_by_last_name"
+    elif choice == "first_name":
+        return "filter_by_first_name"
+    elif choice == "school":
+        return "filter_by_school"
+    elif choice == "status":
+        return "filter_by_status"
 
 
 app = Flask(__name__)
@@ -140,7 +157,8 @@ def register():
     form2 = forms.RegisterForm()
     if request.method == "POST" and form2.validate_on_submit():
         flash("You have successfully registered", "success")
-        create_user(form2)
+        id = create_user(form2)
+        send_emails(id)
         return redirect(url_for("login"))
     return render_template("register2.html", form2=form2)
 
@@ -161,14 +179,14 @@ def homepage():
     update_form = forms.UpdateApplicantForm()
     if request.method == "GET":
         return render_template(
-                                "index2.html",
-                                form=form,
-                                update_form=update_form,
-                                Applicants=Applicants,
-                                Mentors=Mentors,
-                                list_length=list_length,
-                                list_length2=list_length2
-                                )
+            "index2.html",
+            form=form,
+            update_form=update_form,
+            Applicants=Applicants,
+            Mentors=Mentors,
+            list_length=list_length,
+            list_length2=list_length2
+        )
 
     elif request.method == "POST" and form.validate_on_submit():
         query = request.form.get('name')
@@ -176,18 +194,25 @@ def homepage():
         url = filter_redirect(choice, query)
         return redirect(url_for(url, query=query))
 
+
 """LIST ALL EMAILS SENT"""
+
+
 @app.route('/admin/emails', methods=["GET", "POST"])
 def list_emails():
     if current_user.role != 'admin':
         abort(404)
+
     query = Email.select()
+
     form = forms.FilterApplicantForm()
-    return render_template('email.html', form = form)
+    return render_template('email.html', form=form, emails=emails)
 
 
 
 """LIST ALL INTERVIEWS"""
+
+
 @app.route('/admin/interviews', methods=["GET", "POST"])
 def list_interviews():
     if current_user.role != 'admin':
@@ -195,7 +220,6 @@ def list_interviews():
     interviews = Interview.select().join(InterviewSlot).switch().join(Applicant)
     form = forms.FilterApplicantForm()
     return render_template('interview.html', form=form, interviews=interviews)
-
 
 
 """ FILTER APPLICANTS BY FIRST NAME """
@@ -214,15 +238,15 @@ def filter_by_first_name(query):
     update_form = forms.UpdateApplicantForm()
     if request.method == "GET":
         return render_template(
-                                "index2.html",
-                                Applicants=Applicants,
-                                Mentors=Mentors,
-                                list_length=list_length,
-                                list_length2=list_length2,
-                                form=form,
-                                update_form=update_form
-                                )
-    
+            "index2.html",
+            Applicants=Applicants,
+            Mentors=Mentors,
+            list_length=list_length,
+            list_length2=list_length2,
+            form=form,
+            update_form=update_form
+        )
+
     elif request.method == "POST" and form.validate_on_submit():
         query = request.form.get('name')
         choice = request.form.get('options')
@@ -231,6 +255,8 @@ def filter_by_first_name(query):
 
 
 """ FILTER APPLICANTS BY LAST NAME """
+
+
 @app.route('/filter_by_last_name/<query>', methods=["GET", "POST"])
 @login_required
 def filter_by_last_name(query):
@@ -244,15 +270,15 @@ def filter_by_last_name(query):
     update_form = forms.UpdateApplicantForm()
     if request.method == "GET":
         return render_template(
-                                "index2.html",
-                                Applicants=Applicants,
-                                Mentors=Mentors,
-                                list_length=list_length,
-                                list_length2=list_length2,
-                                form=form,
-                                update_form=update_form
-                                )
-    
+            "index2.html",
+            Applicants=Applicants,
+            Mentors=Mentors,
+            list_length=list_length,
+            list_length2=list_length2,
+            form=form,
+            update_form=update_form
+        )
+
     elif request.method == "POST" and form.validate_on_submit():
         query = request.form.get('name')
         choice = request.form.get('options')
@@ -261,6 +287,8 @@ def filter_by_last_name(query):
 
 
 """ FILTER APPLICANTS BY SCHOOL """
+
+
 @app.route('/filter_by_school/<query>', methods=["GET", "POST"])
 @login_required
 def filter_by_school(query):
@@ -274,15 +302,15 @@ def filter_by_school(query):
     update_form = forms.UpdateApplicantForm()
     if request.method == "GET":
         return render_template(
-                                "index2.html",
-                                Applicants=Applicants,
-                                Mentors=Mentors,
-                                list_length=list_length,
-                                list_length2=list_length2,
-                                form=form,
-                                update_form = forms.UpdateApplicantForm()
-                                )
-    
+            "index2.html",
+            Applicants=Applicants,
+            Mentors=Mentors,
+            list_length=list_length,
+            list_length2=list_length2,
+            form=form,
+            update_form=forms.UpdateApplicantForm()
+        )
+
     elif request.method == "POST" and form.validate_on_submit():
         query = request.form.get('name')
         choice = request.form.get('options')
@@ -291,6 +319,8 @@ def filter_by_school(query):
 
 
 """ FILTER APPLICANTS BY FIRST STATUS """
+
+
 @app.route('/filter_by_status/<query>', methods=["GET", "POST"])
 @login_required
 def filter_by_status(query):
@@ -304,14 +334,14 @@ def filter_by_status(query):
     update_form = forms.UpdateApplicantForm()
     if request.method == "GET":
         return render_template(
-                                "index2.html",
-                                Applicants=Applicants,
-                                Mentors=Mentors,
-                                list_length=list_length,
-                                list_length2=list_length2,
-                                form=form,
-                                update_form=update_form
-                                )
+            "index2.html",
+            Applicants=Applicants,
+            Mentors=Mentors,
+            list_length=list_length,
+            list_length2=list_length2,
+            form=form,
+            update_form=update_form
+        )
 
     elif request.method == "POST" and form.validate_on_submit():
         query = request.form.get('name')
@@ -321,6 +351,8 @@ def filter_by_status(query):
 
 
 """ DELETE APPLICANT """
+
+
 @app.route('/delete_applicant/<app_id>', methods=["GET", "POST"])
 @login_required
 def delete_applicant(app_id):
@@ -331,10 +363,10 @@ def delete_applicant(app_id):
         return "Delete is not configured yet. \
                 Instead you are seeing {} {}'s \
                 applicant_id: {} and role: {}".format(
-                                                        user.first_name, 
-                                                        user.last_name, 
-                                                        user.applicant_id, 
-                                                        user.user.role)
+            user.first_name,
+            user.last_name,
+            user.applicant_id,
+            user.user.role)
 
 
 @app.route("/logout")
@@ -367,7 +399,8 @@ def mentor_page():
     if form.validate_on_submit():
         InterviewSlot.create(start=form.start.data, end=form.end.data, reserved=False, assigned_mentor=mentor.id)
         return redirect(url_for("mentor_page"))
-    return render_template("mentor_site.html", interviewlots=interviewlots, interviews=interviews, form=form, mentor = mentor, num_of_intvws=num_of_intvws)
+    return render_template("mentor_site.html", interviewlots=interviewlots, interviews=interviews, form=form,
+                           mentor=mentor, num_of_intvws=num_of_intvws)
 
 
 @app.route('/mentors', methods=["GET", "POST"])
@@ -387,6 +420,7 @@ def users():
     if request.method == "GET":
         return render_template("users.html", LISTA=LISTA, list_length=list_length, class_list=class_list)
 
+
 @app.route('/interview', methods=["GET", "POST"])
 @login_required
 def interview():
@@ -394,6 +428,7 @@ def interview():
     list_length = int(len(interviews))
     if request.method == "GET":
         return render_template("interviews.html", interviews=interviews, list_length=list_length, class_list=class_list)
+
 
 @app.route('/abort', methods=["GET", "POST"])
 def abort():
