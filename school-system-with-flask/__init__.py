@@ -202,9 +202,12 @@ def homepage():
 def list_emails():
     if current_user.role != 'admin':
         abort(404)
-    emails = Email.select()
+
+    query = Email.select()
+
     form = forms.FilterApplicantForm()
     return render_template('email.html', form=form, emails=emails)
+
 
 
 """LIST ALL INTERVIEWS"""

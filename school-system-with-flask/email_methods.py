@@ -185,3 +185,4 @@ class SendEmails:
             recipient_name=recipient_name,
             recipient_email=recipient_email
         )
+

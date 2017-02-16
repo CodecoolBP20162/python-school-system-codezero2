@@ -66,3 +66,6 @@ class ApplicantMethods:
                     (item.applicant_id, item.first_name, item.last_name, item.email, item.city, item.status,
                      item.school.name, 'True'))
         return lista
+
+
+

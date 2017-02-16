@@ -62,3 +62,4 @@ class Interview(BaseModel):
     applicant = ForeignKeyField(Applicant, related_name="interview")
     slot = ForeignKeyField(InterviewSlot, related_name='interview', null=False)
     slot_mentor2 = ForeignKeyField(InterviewSlot, related_name='interview2', null=True)
+
