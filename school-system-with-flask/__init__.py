@@ -165,7 +165,7 @@ def register():
     form2 = forms.RegisterForm()
     if request.method == "POST" and form2.validate_on_submit():
         flash("You have successfully registered", "success")
-        id = create_user(form2)
+        id = create_new_user(form2)
         send_emails(id)
         return redirect(url_for("login"))
     return render_template("register2.html", form2=form2)
