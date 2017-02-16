@@ -75,12 +75,32 @@
 	display: flex;
 	flex-direction: column;
 	padding-left: 20px;
+	padding-right: 20px;
+	width: 200px;
+}
+
+#update_email {
+	margin-top: 10px;
 }
 
 .update_item {
 	display: flex;
 	flex-direction: column;
 	margin-bottom: 15px;
+}
+
+.update_button input {
+	background: #c6393d;
+	color: #fff;
+	border: none;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	cursor: pointer;
+	transition: all 300ms;
+}
+
+.update_button input:hover {
+	transform: scale(1.05);
 }
 
 
@@ -159,6 +179,16 @@
 		height: 100px;
 	}
 }
+
+
+@media (max-width: 730px) {
+
+  	.chart_container {
+  		display: none;
+  	}
+
+}
+
 
 
 

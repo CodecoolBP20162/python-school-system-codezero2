@@ -72,7 +72,19 @@
 
 				<div class="header_right_cell">
 					<button class="add_button" ><i class="fa fa-plus" aria-hidden="true"></i> Add Applicant</button>
+					<div class="new_user_form" style="display: none;">
+						<form method="POST" name="new_user_form" id="new_user_form">
+							<input type="text" name="first_name" placeholder="First Name" required>
+							<input type="text" name="last_name" placeholder="Last Name" required>
+							<input type="email" name="email" placeholder="Email" required>
+							<input type="text" name="city" placeholder="City" required>
+							
+							<input type="submit" name="new_user_form" id="new_user_form" value="Submit" style="background: #c6393d; color: #fff; padding: 9px 20px; font-size: 0.9em; border: none;">
+							
+						</form>
+					</div>
 				</div>
+
 
 				<!-- #### APPLICANT TABLE #### -->  <!-- #### APPLICANT TABLE #### -->
 				<div class="table_container show" id="applicants">
@@ -138,17 +150,33 @@
 							</div>
 							<div class="update_container">
 								<div class="update_div">
-									{% macro render_field(field) %}
-										{{ field(**kwargs)|safe }}
-									{% endmacro %}
-									<form method="POST">
-										{{ update_form.hidden_tag() }}
+									<form method="POST" name="update_form" id="update_form">
+										<input type="hidden" name="update_form_applicant_id" value="{{ applicant.applicant_id }}">
+										<input type="hidden" name="update_form" value="update_form">
 										<div class="update_item">
-										<label for="update_email" style="font-size: 0.8em;">Email:</label>
-										{{ render_field(update_form.email, id="update_email", value=applicant.email) }}
+											<label for="update_email" style="font-size: 0.8em;">Email:</label>
+											<input type="text" name="update_email" id="update_email" value="{{ applicant.email }}">
 										</div>
 										<div class="update_item">
-										<input type="submit" name="" value="update email">
+											<label for="update_school" style="font-size: 0.8em;">School:</label>
+											<select name="update_school" class="select_input">
+												<option selected="selected">{{ applicant.school.name }}</option>
+												<option value="1">Budapest</option>
+												<option value="2">Miskolc</option>
+												<option value="3">Krakow</option>
+											</select>
+										</div>
+										<div class="update_item">
+											<label for="update_status" style="font-size: 0.8em;">Status:</label>
+											<select name="update_status" class="select_input">
+												<option selected="selected">{{ applicant.status }}</option>
+												<option>applied</option>
+												<option>approved</option>
+												<option>rejected</option>
+											</select>
+										</div>
+										<div class="update_item update_button">
+											<input id="" type="submit" name="update_form" id="update_form" value="Update">
 										</div>
 									</form>
 								</div>
@@ -157,46 +185,12 @@
 					</div>
 					{% endfor %}
 				</div>
-				
-				<!-- #### MENTOR TABLE #### -->  <!-- #### MENTOR TABLE #### -->
-				<div class="table_container fade" id="mentors">
-					<div class="table_header">
-						<div class="header_cell1">Mentor</div>
-						<div class="header_cell2">Mentor ID</div>
-						<div class="header_cell3">School</div>
-						<div class="header_cell4">Status</div>
-						<div class="header_cell5">Interview</div>
-						<div class="header_cell6">...</div>
-					</div>
-					<!-- #### TABLE ROW #### -->  <!-- #### TABLE ROW #### -->  <!-- #### TABLE ROW #### -->
-					{% for mentor in Mentors %}
-					<div class="table_row">
-						<div class="table_cell1">
-							<div class="avatar">
-								<i class="fa fa-user fa-2x fa-border" aria-hidden="true"></i>
-							</div>
-							<div class="name_email">
-								<div class="name">{{ mentor.first_name }} {{ mentor.last_name }}</div>
-								<div class="email">{{ mentor.email }}</div>
-							</div>
-						</div>
-						<div class="table_cell2">{{ mentor.id }}</div>
-						<div class="table_cell3">{{ mentor.school.name }}</div>
-						<div class="table_cell4"><span class="rejected">{{ mentor.school.name }}</span></div>
-						<div class="table_cell5">{{ mentor.first_name}}</div>
-						<div class="table_cell6">
-							<a href="{{ url_for('delete_applicant', app_id = mentor.id) }}"><i class="fa fa-trash-o fa-2x" style="" aria-hidden="true"></i></a>
-							<i class="fa fa-bars fa-2x" aria-hidden="true"></i>
-						</div>
-					</div>
-					{% endfor %}
-				</div>
-
 			</div>
 			<!-- ##### END MAIN APPLICATION ##### -->
 		</div>
 		<!-- ##### END APP CONTAINER ##### -->
 	</div>
+	<!--
 	<script type="text/javascript">
 		$("#mentor_menu").click(function(){
 			$("#applicants").removeClass("show");
@@ -217,6 +211,7 @@
 			$("#app_button").addClass("active");
 		});
 	</script>
+	-->
 	<!--
 	<script type="text/javascript">
 		$(".fa-bars").click(function(){
@@ -228,6 +223,12 @@
 		$(".fa-bars").click(function(){
 	    	$("#hidden-"+this.id).slideToggle();
 		});
-</script>
+	</script>
+	<script type="text/javascript">
+		$(".add_button").click(function(){
+			$(".add_button").hide()
+			$(".new_user_form").show(300)
+		});
+	</script>
 </body>
 </html>

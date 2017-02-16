@@ -1,4 +1,8 @@
 from models import *
+try:
+    from models import *
+except Exception:
+    from .models import *
 import random
 
 
