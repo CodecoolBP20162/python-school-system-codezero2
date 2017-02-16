@@ -1,5 +1,5 @@
 from models import *
-from applicant_methods import *
+from applicant_methods_web import *
 from interview_methods import *
 from mentor_methods import *
 from new_applicants import *

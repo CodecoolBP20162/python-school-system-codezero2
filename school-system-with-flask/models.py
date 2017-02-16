@@ -71,7 +71,7 @@ class Interview(BaseModel):
 class Email(BaseModel):
     subject = CharField()
     preview = CharField()
-    type = CharField()
+    email_type = CharField(null=True)
     sent_date = DateTimeField(default=datetime.datetime.now().date())
     recipient_name = CharField()
-    recipient_email = CharField()
+    recipient_email = CharField(null=True)
