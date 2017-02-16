@@ -45,7 +45,7 @@ class SendEmails:
         application_code = user.applicant_id
         school_name = user.school.name
 
-        TO = email if type(email) is list else [email]
+        TO = email if type(email) is list else email
         SUBJECT = "Information about your application to Codecool"
         TEXT = cls.get_email_text("applicant_reg_email.txt").format(
             first_name,
@@ -97,7 +97,7 @@ class SendEmails:
                                                   interview_start_day,
                                                   interview_start_hr)
 
-        TO = email if type(email) is list else [email]
+        TO = email if type(email) is list else email
         SUBJECT = "Information about your personal interview at Codecool"
         TEXT = cls.get_email_text("applicant_interview_email.txt").format(
             first_name,
@@ -154,7 +154,7 @@ class SendEmails:
         mentor_name = mentor_first_name + ' ' + mentor_last_name
         email = "codezerocc@gmail.com"  # mentor.email
 
-        TO = email if type(email) is list else [email]
+        TO = email if type(email) is list else email
         SUBJECT = "A new interview was assigned to you"
         TEXT = cls.get_email_text("mentor_email.txt").format(
             mentor_first_name,

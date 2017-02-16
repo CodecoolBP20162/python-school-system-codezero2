@@ -221,10 +221,10 @@ def list_emails():
     if current_user.role != 'admin':
         abort(404)
 
-    query = Email.select()
+    email = Email.select()
 
     form = forms.FilterApplicantForm()
-    return render_template('email.html', form=form, emails=emails)
+    return render_template('email.html', form=form, emails=email)
 
 
 
