@@ -1,13 +1,15 @@
 from flask import Flask, render_template, request, url_for, redirect, flash, abort
 from peewee import *
-from applicant_methods import *
-import mentor_methods
-import interview_methods
-from email_methods import *
-import forms
-import pushover
+from applicant_methods import * ##
+import mentor_methods  ##
+import interview_methods  ##
+from email_methods import *  ##
+import forms  ##
+import pushover  ##
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 from flask_bcrypt import check_password_hash
+
+
 
 try:
     from forms import *
@@ -37,56 +39,12 @@ try:
 except Exception:
     from .pushover import *
 
-
-def user_list():
-    array = []
-    array.append(('Username', 'Password', 'Applicant name'))
-    for item in User.select():
-        if len(item.applicant) != 0:
-            array.append((item.login, item.password, item.applicant[0].first_name))
-        else:
-            array.append((item.login, item.password))
-
-    return array
+try:
+    from email_methods import *
+except Exception:
+    from .email_methods import *
 
 
-def create_new_user(form):
-    user = User.create_user(login=form.login.data, password=form.password.data)
-    applicant = Applicant.create(first_name=form.first_name.data, last_name=form.last_name.data, email=form.email.data,
-                                 city=str(form.city.data).lower(), user=user.id)
-
-    new_applicant_id = ApplicantMethods.assign_id_to_applicant(applicant)
-    ApplicantMethods.assign_school_to_applicant(applicant)
-    interview_methods.assign_interview(applicant)
-
-    msg = "{} {} just registered as an applicant! - codezero".format(applicant.first_name, applicant.last_name)
-    pushover.send_pushover(msg)
-    return new_applicant_id
-
-
-def send_emails(new_applicant_id):
-
-    applicant_email, message = SendEmails.prepare_applicant_reg_info(new_applicant_id)
-    SendEmails.send_email(applicant_email, message)
-
-    applicant_email, message = SendEmails.prepare_applicant_interview_info(new_applicant_id)
-    SendEmails.send_email(applicant_email, message)
-
-    mentor_email, message = SendEmails.prepare_mentor_interview_info(new_applicant_id)
-    SendEmails.send_email(mentor_email, message)
-
-
-
-
-def filter_redirect(choice, query):
-    if choice == "last_name":
-        return "filter_by_last_name"
-    elif choice == "first_name":
-        return "filter_by_first_name"
-    elif choice == "school":
-        return "filter_by_school"
-    elif choice == "status":
-        return "filter_by_status"
 
 def count_menu_items():
     num_of_applicants = int(len(Applicant.select()))
@@ -165,8 +123,8 @@ def register():
     form2 = forms.RegisterForm()
     if request.method == "POST" and form2.validate_on_submit():
         flash("You have successfully registered", "success")
-        id = create_new_user(form2)
-        send_emails(id)
+        id = ApplicantMethods.create_new_user(form2)
+        SendEmails.send_emails(id)
         return redirect(url_for("login"))
     return render_template("register2.html", form2=form2)
 
@@ -180,18 +138,17 @@ def homepage():
     if current_user.role != 'admin':
         return redirect(url_for('abort'))
     Applicants = Applicant.select()
-    Mentors = Mentor.select()
-    list_length = int(len(Applicants))
-    list_length2 = int(len(Mentors))
+    len_applicants, len_mentors, len_emails, len_interviews = count_menu_items()
     form = forms.FilterApplicantForm()
     if request.method == "GET":
         return render_template(
                                 "index2.html",
                                 form=form,
                                 Applicants=Applicants,
-                                Mentors=Mentors,
-                                list_length=list_length,
-                                list_length2=list_length2
+                                len_applicants=len_applicants,
+                                len_interviews=len_interviews,
+                                len_emails=len_emails,
+                                len_mentors=len_mentors
                                 )
 
     elif request.method == "POST":
@@ -209,35 +166,8 @@ def homepage():
         elif form.validate_on_submit():
             query = request.form.get('name')
             choice = request.form.get('options')
-            url = filter_redirect(choice, query)
+            url = ApplicantMethods.filter_redirect(choice, query)
             return redirect(url_for(url, query=query))
-
-
-"""LIST ALL EMAILS SENT"""
-
-
-@app.route('/admin/emails', methods=["GET", "POST"])
-def list_emails():
-    if current_user.role != 'admin':
-        abort(404)
-
-    query = Email.select()
-
-    form = forms.FilterApplicantForm()
-    return render_template('email.html', form=form, emails=emails)
-
-
-
-"""LIST ALL INTERVIEWS"""
-
-
-@app.route('/admin/interviews', methods=["GET", "POST"])
-def list_interviews():
-    if current_user.role != 'admin':
-        abort(404)
-    interviews = Interview.select().join(InterviewSlot).switch().join(Applicant)
-    form = forms.FilterApplicantForm()
-    return render_template('interview.html', form=form, interviews=interviews)
 
 
 """ FILTER APPLICANTS BY FIRST NAME """
@@ -249,18 +179,17 @@ def filter_by_first_name(query):
     if current_user.role != 'admin':
         abort(404)
     Applicants = Applicant.select().where(Applicant.first_name.contains(query))
-    Mentors = Mentor.select()
-    list_length = int(len(Applicants))
-    list_length2 = int(len(Mentors))
+    len_applicants, len_mentors, len_emails, len_interviews = count_menu_items()
     form = forms.FilterApplicantForm()
     update_form = forms.UpdateApplicantForm()
     if request.method == "GET":
         return render_template(
             "index2.html",
             Applicants=Applicants,
-            Mentors=Mentors,
-            list_length=list_length,
-            list_length2=list_length2,
+            len_applicants=len_applicants,
+            len_interviews=len_interviews,
+            len_emails=len_emails,
+            len_mentors=len_mentors,
             form=form,
             update_form=update_form
         )
@@ -268,7 +197,7 @@ def filter_by_first_name(query):
     elif request.method == "POST" and form.validate_on_submit():
         query = request.form.get('name')
         choice = request.form.get('options')
-        url = filter_redirect(choice, query)
+        url = ApplicantMethods.filter_redirect(choice, query)
         return redirect(url_for(url, query=query))
 
 
@@ -281,18 +210,17 @@ def filter_by_last_name(query):
     if current_user.role != 'admin':
         abort(404)
     Applicants = Applicant.select().where(Applicant.last_name.contains(query))
-    Mentors = Mentor.select()
-    list_length = int(len(Applicants))
-    list_length2 = int(len(Mentors))
+    len_applicants, len_mentors, len_emails, len_interviews = count_menu_items()
     form = forms.FilterApplicantForm()
     update_form = forms.UpdateApplicantForm()
     if request.method == "GET":
         return render_template(
             "index2.html",
             Applicants=Applicants,
-            Mentors=Mentors,
-            list_length=list_length,
-            list_length2=list_length2,
+            len_applicants=len_applicants,
+            len_interviews=len_interviews,
+            len_emails=len_emails,
+            len_mentors=len_mentors,
             form=form,
             update_form=update_form
         )
@@ -300,7 +228,7 @@ def filter_by_last_name(query):
     elif request.method == "POST" and form.validate_on_submit():
         query = request.form.get('name')
         choice = request.form.get('options')
-        url = filter_redirect(choice, query)
+        url = ApplicantMethods.filter_redirect(choice, query)
         return redirect(url_for(url, query=query))
 
 
@@ -313,18 +241,17 @@ def filter_by_school(query):
     if current_user.role != 'admin':
         abort(404)
     Applicants = Applicant.select().join(School).where(School.name.contains(query))
-    Mentors = Mentor.select()
-    list_length = int(len(Applicants))
-    list_length2 = int(len(Mentors))
+    len_applicants, len_mentors, len_emails, len_interviews = count_menu_items()
     form = forms.FilterApplicantForm()
     update_form = forms.UpdateApplicantForm()
     if request.method == "GET":
         return render_template(
             "index2.html",
             Applicants=Applicants,
-            Mentors=Mentors,
-            list_length=list_length,
-            list_length2=list_length2,
+            len_applicants=len_applicants,
+            len_interviews=len_interviews,
+            len_emails=len_emails,
+            len_mentors=len_mentors,
             form=form,
             update_form=forms.UpdateApplicantForm()
         )
@@ -332,7 +259,7 @@ def filter_by_school(query):
     elif request.method == "POST" and form.validate_on_submit():
         query = request.form.get('name')
         choice = request.form.get('options')
-        url = filter_redirect(choice, query)
+        url = ApplicantMethods.filter_redirect(choice, query)
         return redirect(url_for(url, query=query))
 
 
@@ -346,18 +273,17 @@ def filter_by_status(query):
     if current_user.role != 'admin':
         abort(404)
     Applicants = Applicant.select().where(Applicant.status.contains(query))
-    Mentors = Mentor.select()
-    list_length = int(len(Applicants))
-    list_length2 = int(len(Mentors))
+    len_applicants, len_mentors, len_emails, len_interviews = count_menu_items()
     form = forms.FilterApplicantForm()
     update_form = forms.UpdateApplicantForm()
     if request.method == "GET":
         return render_template(
             "index2.html",
             Applicants=Applicants,
-            Mentors=Mentors,
-            list_length=list_length,
-            list_length2=list_length2,
+            len_applicants=len_applicants,
+            len_interviews=len_interviews,
+            len_emails=len_emails,
+            len_mentors=len_mentors,
             form=form,
             update_form=update_form
         )
@@ -365,7 +291,7 @@ def filter_by_status(query):
     elif request.method == "POST" and form.validate_on_submit():
         query = request.form.get('name')
         choice = request.form.get('options')
-        url = filter_redirect(choice, query)
+        url = applicant_methods.filter_redirect(choice, query)
         return redirect(url_for(url, query=query))
 
 
@@ -379,13 +305,228 @@ def delete_applicant(app_id):
         abort(404)
     user = Applicant.select().where(Applicant.applicant_id == app_id).get()
     if request.method == "GET":
-        return "Delete is not configured yet. \
-                Instead you are seeing {} {}'s \
-                applicant_id: {} and role: {}".format(
-            user.first_name,
-            user.last_name,
-            user.applicant_id,
-            user.user.role)
+        user.delete_instance(recursive=True)
+        return redirect(url_for('homepage'))
+
+
+"""LIST ALL EMAILS SENT"""
+
+
+@app.route('/admin/emails', methods=["GET", "POST"])
+def list_emails():
+    if current_user.role != 'admin':
+        abort(404)
+
+    emails = Email.select()
+    len_applicants, len_mentors, len_emails, len_interviews = count_menu_items()
+    form = forms.FilterEmailForm()
+    if request.method == "GET":
+        return render_template('email.html', 
+                                form=form, 
+                                emails=emails, 
+                                len_applicants=len_applicants,
+                                len_interviews=len_interviews,
+                                len_emails=len_emails,
+                                len_mentors=len_mentors)
+
+    elif request.method == "POST" and form.validate_on_submit():
+        query = request.form.get('name')
+        choice = request.form.get('options')
+        url = SendEmails.filter_redirect(choice, query)
+        return redirect(url_for(url, query=query))
+
+
+""" FILTER EMAILS BY TYPE """
+
+
+@app.route('/emails/filter_by_type/<query>', methods=["GET", "POST"])
+@login_required
+def filter_by_type(query):
+    if current_user.role != 'admin':
+        abort(404)
+    emails = Email.select().where(Email.email_type.contains(query))
+    len_applicants, len_mentors, len_emails, len_interviews = count_menu_items()
+    form = forms.FilterEmailForm()
+    if request.method == "GET":
+        return render_template('email.html', 
+                                form=form, 
+                                emails=emails, 
+                                len_applicants=len_applicants,
+                                len_interviews=len_interviews,
+                                len_emails=len_emails,
+                                len_mentors=len_mentors)
+
+    elif request.method == "POST" and form.validate_on_submit():
+        query = request.form.get('name')
+        choice = request.form.get('options')
+        url = SendEmails.filter_redirect(choice, query)
+        return redirect(url_for(url, query=query))
+
+
+""" FILTER EMAILS BY SUBJECT """
+
+
+@app.route('/emails/filter_by_subject/<query>', methods=["GET", "POST"])
+@login_required
+def filter_by_subject(query):
+    if current_user.role != 'admin':
+        abort(404)
+    emails = Email.select().where(Email.subject.contains(query))
+    len_applicants, len_mentors, len_emails, len_interviews = count_menu_items()
+    form = forms.FilterEmailForm()
+    if request.method == "GET":
+        return render_template('email.html', 
+                                form=form, 
+                                emails=emails, 
+                                len_applicants=len_applicants,
+                                len_interviews=len_interviews,
+                                len_emails=len_emails,
+                                len_mentors=len_mentors)
+
+    elif request.method == "POST" and form.validate_on_submit():
+        query = request.form.get('name')
+        choice = request.form.get('options')
+        url = SendEmails.filter_redirect(choice, query)
+        return redirect(url_for(url, query=query))
+
+
+""" FILTER EMAILS BY RECIPIENT """
+
+
+@app.route('/emails/filter_by_recipient/<query>', methods=["GET", "POST"])
+@login_required
+def filter_by_recipient(query):
+    if current_user.role != 'admin':
+        abort(404)
+    emails = Email.select().where(Email.recipient_name.contains(query))
+    len_applicants, len_mentors, len_emails, len_interviews = count_menu_items()
+    form = forms.FilterEmailForm()
+    if request.method == "GET":
+        return render_template('email.html', 
+                                form=form, 
+                                emails=emails, 
+                                len_applicants=len_applicants,
+                                len_interviews=len_interviews,
+                                len_emails=len_emails,
+                                len_mentors=len_mentors)
+
+    elif request.method == "POST" and form.validate_on_submit():
+        query = request.form.get('name')
+        choice = request.form.get('options')
+        url = SendEmails.filter_redirect(choice, query)
+        return redirect(url_for(url, query=query))
+
+
+"""LIST ALL INTERVIEWS"""
+
+
+@app.route('/admin/interviews', methods=["GET", "POST"])
+def list_interviews():
+    if current_user.role != 'admin':
+        abort(404)
+    interviews = Interview.select().join(InterviewSlot).switch().join(Applicant)
+    form = forms.FilterInterviewForm()
+    len_applicants, len_mentors, len_emails, len_interviews = count_menu_items()
+    if request.method == "GET":
+        return render_template('interview.html', 
+                                form=form, 
+                                interviews=interviews, 
+                                len_applicants=len_applicants,
+                                len_interviews=len_interviews,
+                                len_emails=len_emails,
+                                len_mentors=len_mentors)
+
+    elif request.method == "POST" and form.validate_on_submit():
+            query = request.form.get('name')
+            choice = request.form.get('options')
+            url = interview_methods.filter_redirect(choice, query)
+            return redirect(url_for(url, query=query))
+
+
+""" FILTER INTERVIEWS BY APPLICANT """
+
+
+@app.route('/interview/filter_by_applicant/<query>', methods=["GET", "POST"])
+@login_required
+def filter_by_applicant(query):
+    if current_user.role != 'admin':
+        abort(404)
+    interviews = Interview.select().join(InterviewSlot).switch().join(Applicant).where(Applicant.first_name.contains(query) | Applicant.last_name.contains(query))
+    len_applicants, len_mentors, len_emails, len_interviews = count_menu_items()
+    form = forms.FilterInterviewForm()
+    if request.method == "GET":
+        return render_template(
+                                "interview.html",
+                                form=form, 
+                                interviews=interviews, 
+                                len_applicants=len_applicants,
+                                len_interviews=len_interviews,
+                                len_emails=len_emails,
+                                len_mentors=len_mentors)
+
+    elif request.method == "POST" and form.validate_on_submit():
+        query = request.form.get('name')
+        choice = request.form.get('options')
+        url = interview_methods.filter_redirect(choice, query)
+        return redirect(url_for(url, query=query))
+
+
+""" FILTER INTERVIEWS BY MENTOR """
+
+
+@app.route('/interview/filter_by_mentor/<query>', methods=["GET", "POST"])
+@login_required
+def filter_by_mentor(query):
+    if current_user.role != 'admin':
+        abort(404)
+    interviews = Interview.select().join(InterviewSlot).join(Mentor).switch().join(Applicant).where(Mentor.first_name.contains(query) | Mentor.last_name.contains(query))
+    print(len(interviews))
+    len_applicants, len_mentors, len_emails, len_interviews = count_menu_items()
+    form = forms.FilterInterviewForm()
+    if request.method == "GET":
+        return render_template(
+                                "interview.html",
+                                form=form, 
+                                interviews=interviews, 
+                                len_applicants=len_applicants,
+                                len_interviews=len_interviews,
+                                len_emails=len_emails,
+                                len_mentors=len_mentors)
+
+    elif request.method == "POST" and form.validate_on_submit():
+        query = request.form.get('name')
+        choice = request.form.get('options')
+        url = interview_methods.filter_redirect(choice, query)
+        return redirect(url_for(url, query=query))
+
+
+""" FILTER INTERVIEWS BY MENTOR """
+
+
+@app.route('/interview/filter_by_location/<query>', methods=["GET", "POST"])
+@login_required
+def filter_by_location(query):
+    if current_user.role != 'admin':
+        abort(404)
+    interviews = Interview.select().join(Applicant).join(School).where(School.name.contains(query))
+    print(len(interviews))
+    len_applicants, len_mentors, len_emails, len_interviews = count_menu_items()
+    form = forms.FilterInterviewForm()
+    if request.method == "GET":
+        return render_template(
+                                "interview.html",
+                                form=form, 
+                                interviews=interviews, 
+                                len_applicants=len_applicants,
+                                len_interviews=len_interviews,
+                                len_emails=len_emails,
+                                len_mentors=len_mentors)
+
+    elif request.method == "POST" and form.validate_on_submit():
+        query = request.form.get('name')
+        choice = request.form.get('options')
+        url = interview_methods.filter_redirect(choice, query)
+        return redirect(url_for(url, query=query))
 
 
 @app.route("/logout")
@@ -434,7 +575,7 @@ def mentors():
 @app.route('/users', methods=["GET", "POST"])
 @login_required
 def users():
-    LISTA = user_list()
+    LISTA = ApplicantMethods.user_list()
     list_length = int(len(LISTA))
     if request.method == "GET":
         return render_template("users.html", LISTA=LISTA, list_length=list_length)

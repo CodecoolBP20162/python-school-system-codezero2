@@ -89,10 +89,10 @@ class Email(BaseModel):
 #db.create_table(Email)
 
 '''
-for i in range(1, 3):
+for i in range(1, 7):
     InterviewSlot.create(start='2017-03-0{} 11:00'.format(i), end='2017-03-0{} 12:00'.format(i), reserved=False, assigned_mentor=3)
 
-for i in range(4, 10):
+for i in range(8, 10):
     InterviewSlot.create(start='2017-03-0{} 11:00'.format(i), end='2017-03-0{} 12:00'.format(i), reserved=False, assigned_mentor=3)
 
 
@@ -111,5 +111,5 @@ for i in range(10, 20):
 
 for i in range(20, 30):
     InterviewSlot.create(start='2017-04-{} 11:00'.format(i), end='2017-04-{} 12:00'.format(i), reserved=False, assigned_mentor=6)
-
 '''
+

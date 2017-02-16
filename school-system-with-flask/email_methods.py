@@ -1,11 +1,24 @@
-from applicant_methods import *
-from models import *
+from applicant_methods import *  ##
+from models import *  ##
 import smtplib
 import traceback
-from interview_methods import *
+from interview_methods import *  ##
 import psycopg2
 import peewee
 
+
+try:
+    from models import *
+except Exception:
+    from .models import *
+try:
+    from interview_methods import *
+except Exception:
+    from .interview_methods import *
+try:
+    from email_methods import *
+except Exception:
+    from .email_methods import *
 
 
 class SendEmails:
@@ -45,7 +58,7 @@ class SendEmails:
         application_code = user.applicant_id
         school_name = user.school.name
 
-        TO = email if type(email) is list else [email]
+        TO = email if type(email) is list else email
         SUBJECT = "Information about your application to Codecool"
         TEXT = cls.get_email_text("applicant_reg_email.txt").format(
             first_name,
@@ -97,7 +110,7 @@ class SendEmails:
                                                   interview_start_day,
                                                   interview_start_hr)
 
-        TO = email if type(email) is list else [email]
+        TO = email if type(email) is list else email
         SUBJECT = "Information about your personal interview at Codecool"
         TEXT = cls.get_email_text("applicant_interview_email.txt").format(
             first_name,
@@ -154,7 +167,7 @@ class SendEmails:
         mentor_name = mentor_first_name + ' ' + mentor_last_name
         email = "codezerocc@gmail.com"  # mentor.email
 
-        TO = email if type(email) is list else [email]
+        TO = email if type(email) is list else email
         SUBJECT = "A new interview was assigned to you"
         TEXT = cls.get_email_text("mentor_email.txt").format(
             mentor_first_name,
@@ -186,3 +199,24 @@ class SendEmails:
             recipient_email=recipient_email
         )
 
+    @staticmethod
+    def filter_redirect(choice, query):
+        if choice == "type":
+            return "filter_by_type"
+        elif choice == "subject":
+            return "filter_by_subject"
+        elif choice == "recipient":
+            return "filter_by_recipient"
+
+
+    @staticmethod
+    def send_emails(new_applicant_id):
+
+        applicant_email, message = SendEmails.prepare_applicant_reg_info(new_applicant_id)
+        SendEmails.send_email(applicant_email, message)
+
+        applicant_email, message = SendEmails.prepare_applicant_interview_info(new_applicant_id)
+        SendEmails.send_email(applicant_email, message)
+
+        mentor_email, message = SendEmails.prepare_mentor_interview_info(new_applicant_id)
+        SendEmails.send_email(mentor_email, message)

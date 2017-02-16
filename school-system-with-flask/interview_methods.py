@@ -1,4 +1,4 @@
-from models import *
+from models import * ##
 try:
     from models import *
 except Exception:
@@ -54,6 +54,16 @@ class interview_methods:
             return False
         Interview.create(applicant=applicant.id, slot=slot.id)
         InterviewSlot.update(reserved=True).where(InterviewSlot.id == slot.id).execute()
+   
     @classmethod
     def get_interviews(cls):
         return  Interview.select()
+
+    @staticmethod
+    def filter_redirect(choice, query):
+        if choice == "applicant":
+            return "filter_by_applicant"
+        elif choice == "mentor":
+            return "filter_by_mentor"
+        elif choice == "location":
+            return "filter_by_location"
