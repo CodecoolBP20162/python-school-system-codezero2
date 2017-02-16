@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Codezero Admin</title>
+  <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ url_for('static', filename='css/details.css') }}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Hind+Madurai:400,500,600,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js" ></script>
+</head>
+<body>
+	<div class="main_container">
+		<!-- ##### NAVBAR ##### -->  <!-- ##### NAVBAR ##### -->  <!-- ##### NAVBAR ##### -->
+		<div class="navbar">
+			<div class="nav_container">
+				<div class="logo"><img width="40px;" src="https://codezero.nobrainers.io/static/images/codeZeroLogo-copy.png"></div>
+				<div class="login_reg">
+					<a href="{{ url_for('login') }}">login</a>
+					<a href="{{ url_for('logout') }}">log out</a>
+				</div>
+			</div>
+		</div>
+		<!-- ##### APP CONTAINER ##### -->  <!-- ##### APP CONTAINER ##### -->  <!-- ##### APP CONTAINER ##### -->
+		<div class="app_container">
+			<!-- ##### FILTER LEFT ##### -->  <!-- ##### FILTER LEFT ##### -->  <!-- ##### FILTER LEFT ##### -->
+			<div class="left_cell">
+				<div class="search_card">
+					{% macro render_field(field) %}
+						{{ field(**kwargs)|safe }}
+					{% endmacro %}
+					<form method="POST">
+						{{ form.hidden_tag() }}
+						{{ render_field(form.options, class="select_input") }}
+						<i class="fa fa-search fasearch" aria-hidden="true"></i>
+						{{ render_field(form.name, class="search_input", placeholder="Search") }}
+					</form>
+				</div>
+				<div class="first_card">
+					<a href="{{ url_for('homepage') }}" id="applicant_menu">
+						<div class="menu_item">
+							<div>Applicants</div>
+							<button id="app_button" class="nr active">{{ list_length }}</button>
+						</div>
+					</a>
+					<a href="#" id="mentor_menu">
+						<div class="menu_item">
+							<div>Mentors</div>
+							<button id="mentor_button" class="nr">{{ list_length2 }}</button>
+						</div>
+					</a>
+					<a href="{{ url_for('list_emails') }}">
+						<div class="menu_item">
+							<div>Emails</div>
+							<button class="nr">10</button>
+						</div>
+					</a>
+					<a href="{{ url_for('list_interviews') }}">
+						<div class="menu_item">
+							<div>Interviews</div>
+							<button class="nr">2</button>
+						</div>
+					</a>
+				</div>
+				
+				<div class="second_card">
+					
+				</div>
+			</div>
+			<!-- ##### MAIN APPLICATION ##### -->  <!-- ##### MAIN APPLICATION ##### -->  <!-- ##### MAIN APPLICATION ##### -->
+			<div class="right_cell">
+
+				<div class="header_right_cell">
+					<button class="add_button" ><i class="fa fa-plus" aria-hidden="true"></i> Add Applicant</button>
+					<div class="new_user_form" style="display: none;">
+						<form method="POST" name="new_user_form" id="new_user_form">
+							<input type="text" name="first_name" placeholder="First Name" required>
+							<input type="text" name="last_name" placeholder="Last Name" required>
+							<input type="email" name="email" placeholder="Email" required>
+							<input type="text" name="city" placeholder="City" required>
+							
+							<input type="submit" name="new_user_form" id="new_user_form" value="Submit" style="background: #c6393d; color: #fff; padding: 9px 20px; font-size: 0.9em; border: none;">
+							
+						</form>
+					</div>
+				</div>
+
+
+				<!-- #### APPLICANT TABLE #### -->  <!-- #### APPLICANT TABLE #### -->
+				<div class="table_container show" id="applicants">
+					<div class="table_header">
+						<div class="header_cell1">Applicant</div>
+						<div class="header_cell2">App Code</div>
+						<div class="header_cell3">School</div>
+						<div class="header_cell4">Status</div>
+						<div class="header_cell5">Interview</div>
+						<div class="header_cell6">...</div>
+					</div>
+					<!-- #### TABLE ROW #### -->  <!-- #### TABLE ROW #### -->  <!-- #### TABLE ROW #### -->
+					{% for applicant in Applicants %}
+					<div class="table_row">
+						<div class="table_cell1">
+							<div class="avatar">
+								<i class="fa fa-user fa-2x fa-border" aria-hidden="true"></i>
+							</div>
+							<div class="name_email">
+								<div class="name">{{ applicant.first_name }} {{ applicant.last_name }}</div>
+								<div class="email">{{ applicant.email }}</div>
+							</div>
+						</div>
+						<div class="table_cell2">{{ applicant.applicant_id }}</div>
+						<div class="table_cell3">{{ applicant.school.name }}</div>
+						{% if applicant.status == "applied" %}
+						<div class="table_cell4"><span class="status">{{ applicant.status }}</span></div>
+						{% elif applicant.status == "approved" %}
+						<div class="table_cell4"><span class="approved">{{ applicant.status }}</span></div>
+						{% elif applicant.status == "rejected" %}
+						<div class="table_cell4"><span class="rejected">{{ applicant.status }}</span></div>
+						{% endif %}
+						{% if applicant.interview[0] %}
+						<div class="table_cell5">{{ applicant.interview[0].slot.start }}</div>
+						{% else %}
+						<div class="table_cell5">N/A</div>
+						{% endif %}
+						<div class="table_cell6">
+							<a href="{{ url_for('delete_applicant', app_id = applicant.applicant_id) }}"><i class="fa fa-trash-o fa-2x" style="" aria-hidden="true"></i></a>
+							<i class="fa fa-bars fa-2x" aria-hidden="true" id="{{ applicant.applicant_id }}"></i>
+						</div>
+					</div>
+					<div class="hidden_container" id="hidden-{{ applicant.applicant_id }}">
+						<div class="details_container">
+							<div class="stats_container">
+								<div class="stats_div">
+									<div class="stat_circle"><span>79%</span></div>		
+									<div class="stat_title"><span>Logic</span></div>		
+								</div>
+								<div class="stats_div">
+									<div class="stat_circle"><span>49%</span></div>		
+									<div class="stat_title"><span>English</span></div>		
+								</div>
+								<div class="stats_div">
+									<div class="stat_circle"><span>99%</span></div>		
+									<div class="stat_title"><span>Interview</span></div>		
+								</div>
+							</div>
+							<div class="chart_container">
+								<div class="chart_div">
+									<img src="{{ url_for('static', filename='images/radar.png') }}">
+								</div>
+							</div>
+							<div class="update_container">
+								<div class="update_div">
+									<form method="POST" name="update_form" id="update_form">
+										<input type="hidden" name="update_form_applicant_id" value="{{ applicant.applicant_id }}">
+										<input type="hidden" name="update_form" value="update_form">
+										<div class="update_item">
+											<label for="update_email" style="font-size: 0.8em;">Email:</label>
+											<input type="text" name="update_email" id="update_email" value="{{ applicant.email }}">
+										</div>
+										<div class="update_item">
+											<label for="update_school" style="font-size: 0.8em;">School:</label>
+											<select name="update_school" class="select_input">
+												<option selected="selected">{{ applicant.school.name }}</option>
+												<option value="1">Budapest</option>
+												<option value="2">Miskolc</option>
+												<option value="3">Krakow</option>
+											</select>
+										</div>
+										<div class="update_item">
+											<label for="update_status" style="font-size: 0.8em;">Status:</label>
+											<select name="update_status" class="select_input">
+												<option selected="selected">{{ applicant.status }}</option>
+												<option>applied</option>
+												<option>approved</option>
+												<option>rejected</option>
+											</select>
+										</div>
+										<div class="update_item update_button">
+											<input id="" type="submit" name="update_form" id="update_form" value="Update">
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+			<!-- ##### END MAIN APPLICATION ##### -->
+		</div>
+		<!-- ##### END APP CONTAINER ##### -->
+	</div>
+	<!--
+	<script type="text/javascript">
+		$("#mentor_menu").click(function(){
+			$("#applicants").removeClass("show");
+			$("#applicants").addClass("fade");
+			$("#mentors").removeClass("fade");
+			$("#mentors").addClass("show");
+			$("#app_button").removeClass("active");
+			$("#mentor_button").addClass("active");
+		});
+	</script>
+	<script type="text/javascript">
+		$("#applicant_menu").click(function(){
+			$("#mentors").removeClass("show");
+			$("#mentors").addClass("fade");
+			$("#applicants").removeClass("fade");
+			$("#applicants").addClass("show");
+			$("#mentor_button").removeClass("active");
+			$("#app_button").addClass("active");
+		});
+	</script>
+	-->
+	<!--
+	<script type="text/javascript">
+		$(".fa-bars").click(function(){
+			$("#hidden-"+this.id).toggleClass("show_details");
+		});
+	</script>
+	-->
+	<script type="text/javascript">
+		$(".fa-bars").click(function(){
+	    	$("#hidden-"+this.id).slideToggle();
+		});
+	</script>
+	<script type="text/javascript">
+		$(".add_button").click(function(){
+			$(".add_button").hide()
+			$(".new_user_form").show(300)
+		});
+	</script>
+</body>
+</html>

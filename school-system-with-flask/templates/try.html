@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>try</title>
+	<script
+		  src="https://code.jquery.com/jquery-3.1.1.js"
+		  integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+		  crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="toggle"><h1>TOGGLE</h1></div>
+<div class="hidden" style="width: 400px; height: 400px; display: none; background: #444;">aaaa</div>
+
+<script type="text/javascript">
+	$(".toggle").click(function(){
+    	$(".hidden").slideToggle();
+	});
+</script>
+</body>
+</html>

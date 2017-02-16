@@ -6,7 +6,7 @@ import datetime
 # Configure your database connection here
 # database name = should be your username on your laptop
 # database user = should be your username on your laptop
-db = PostgresqlDatabase('aracz', user='aracz')
+db = PostgresqlDatabase('robertgaspar', user='robertgaspar')
 
 
 # db = PostgresqlDatabase('schoolsystem', user='codezero',password='codezero',host='46.101.4.131')
@@ -62,3 +62,4 @@ class Interview(BaseModel):
     applicant = ForeignKeyField(Applicant, related_name="interview")
     slot = ForeignKeyField(InterviewSlot, related_name='interview', null=False)
     slot_mentor2 = ForeignKeyField(InterviewSlot, related_name='interview2', null=True)
+
