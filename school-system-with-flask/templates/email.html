@@ -37,28 +37,28 @@
 					</form>
 				</div>
 				<div class="first_card">
-					<a href="#" id="applicant_menu">
+					<a href="{{ url_for('homepage') }}" id="applicant_menu">
 						<div class="menu_item">
 							<div>Applicants</div>
-							<button id="app_button" class="nr active">{{ list_length }}</button>
+							<button id="app_button" class="nr">{{ len_applicants }}</button>
 						</div>
 					</a>
 					<a href="#" id="mentor_menu">
 						<div class="menu_item">
 							<div>Mentors</div>
-							<button id="mentor_button" class="nr">{{ list_length2 }}</button>
+							<button id="mentor_button" class="nr">{{ len_mentors }}</button>
 						</div>
 					</a>
-					<a href="#">
+					<a href="{{ url_for('list_emails') }}">
 						<div class="menu_item">
 							<div>Emails</div>
-							<button class="nr">10</button>
+							<button class="nr active">{{ len_emails }}</button>
 						</div>
 					</a>
-					<a href="#">
+					<a href="{{ url_for('list_interviews') }}">
 						<div class="menu_item">
 							<div>Interviews</div>
-							<button class="nr">2</button>
+							<button class="nr">{{ len_interviews }}</button>
 						</div>
 					</a>
 				</div>
@@ -77,57 +77,24 @@
 				<!-- #### EMAIL TABLE #### -->  <!-- #### EMAIL TABLE #### -->
 				<div class="table_container show" id="applicants">
 					<div class="table_header">
-						<div class="header_cell1">Subject</div>
-						<div class="header_cell2">Preview</div>
+						<div class="header_cell1" style="width: 200px; margin-right: 15px;">Subject</div>
+						<div class="header_cell2" style="width: 300px; margin-right: 20px;">Preview</div>
 						<div class="header_cell3">Type</div>
 						<div class="header_cell4">Date</div>
 						<div class="header_cell5">Recipient</div>
                         <div class="header_cell6">Recipient Email</div>
 					</div>
 					<!-- #### TABLE ROW #### -->  <!-- #### TABLE ROW #### -->  <!-- #### TABLE ROW #### -->
+					{% for email in emails %}
 					<div class="table_row">
 
 						<!--   ide kell majd egy for ciklus, ami a __init__/emails/query alapján feltölti a táblát-->
-						<div class="table_cell1">Codecool Registration Message</div>
-						<div class="table_cell2">Dear Codecooler, Thank you for registering</div>
-						<div class="table_cell3">Registration</div>
-						<div class="table_cell4">02-14-2016</div>
-						<div class="table_cell5">Nap Pali</div>
-						<div class="table_cell6">nappali@freemail.hu</div>
-					</div>
-
-				</div>
-
-				<!-- #### MENTOR TABLE #### -->  <!-- #### MENTOR TABLE #### -->
-				<div class="table_container fade" id="mentors">
-					<div class="table_header">
-						<div class="header_cell1">Mentor</div>
-						<div class="header_cell2">Mentor ID</div>
-						<div class="header_cell3">School</div>
-						<div class="header_cell4">Status</div>
-						<div class="header_cell5">Interview</div>
-						<div class="header_cell6">...</div>
-					</div>
-					<!-- #### TABLE ROW #### -->  <!-- #### TABLE ROW #### -->  <!-- #### TABLE ROW #### -->
-					{% for mentor in Mentors %}
-					<div class="table_row">
-						<div class="table_cell1">
-							<div class="avatar">
-								<i class="fa fa-user fa-2x fa-border" aria-hidden="true"></i>
-							</div>
-							<div class="name_email">
-								<div class="name">{{ mentor.first_name }} {{ mentor.last_name }}</div>
-								<div class="email">{{ mentor.email }}</div>
-							</div>
-						</div>
-						<div class="table_cell2">{{ mentor.id }}</div>
-						<div class="table_cell3">{{ mentor.school.name }}</div>
-						<div class="table_cell4"><span class="rejected">{{ mentor.school.name }}</span></div>
-						<div class="table_cell5">{{ mentor.first_name}}</div>
-						<div class="table_cell6">
-							<a href="{{ url_for('delete_applicant', app_id = mentor.id) }}"><i class="fa fa-trash-o fa-2x" style="" aria-hidden="true"></i></a>
-							<i class="fa fa-bars fa-2x" aria-hidden="true"></i>
-						</div>
+						<div class="table_cell1" style="width: 200px; margin-right: 15px; color: #3e3c5a">{{ email.subject }}</div>
+						<div class="table_cell2" style="width: 300px; margin-right: 20px;">{{ email.preview }}</div>
+						<div class="table_cell3" style="color: #C42E34" >{{ email.email_type }}</div>
+						<div class="table_cell4">{{ email.sent_date }}</div>
+						<div class="table_cell5">{{ email.recipient_name }}</div>
+						<div class="table_cell6">{{ email.recipient_email }}</div>
 					</div>
 					{% endfor %}
 				</div>

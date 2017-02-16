@@ -108,6 +108,21 @@ class FilterApplicantForm(Form):
                                                 ("status","Filter by Status"),
                                                 ])
 
+class FilterInterviewForm(Form):
+    name = StringField("name", validators=[DataRequired()])
+    options = SelectField("options", choices=[
+                                                ("applicant","Filter by Applicant"), 
+                                                ("mentor","Filter by Mentor"),
+                                                ("location","Filter by Location")
+                                                ])
+
+class FilterEmailForm(Form):
+    name = StringField("name", validators=[DataRequired()])
+    options = SelectField("options", choices=[
+                                                ("type","Filter by Type"), 
+                                                ("subject","Filter by Subject"),
+                                                ("recipient","Filter by Recipient")
+                                                ])
 
 class UpdateApplicantForm(Form):
     email = StringField("update_email", validators=[DataRequired()])

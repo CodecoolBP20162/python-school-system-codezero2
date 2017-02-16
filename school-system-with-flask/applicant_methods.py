@@ -1,6 +1,18 @@
 import random
 import string
 
+from interview_methods import * ##
+from pushover import * ##
+
+try:
+    from pushover import *
+except Exception:
+    from .pushover import *
+try:
+    from interview_methods import *
+except Exception:
+    from .interview_methods import *
+
 try:
     from .models import *
 except Exception:
@@ -67,5 +79,42 @@ class ApplicantMethods:
                      item.school.name, 'True'))
         return lista
 
+    @staticmethod
+    def filter_redirect(choice, query):
+        if choice == "last_name":
+            return "filter_by_last_name"
+        elif choice == "first_name":
+            return "filter_by_first_name"
+        elif choice == "school":
+            return "filter_by_school"
+        elif choice == "status":
+            return "filter_by_status"
+
+    @staticmethod
+    def create_new_user(form):
+        user = User.create_user(login=form.login.data, password=form.password.data)
+        applicant = Applicant.create(first_name=form.first_name.data, last_name=form.last_name.data, email=form.email.data,
+                                     city=str(form.city.data).lower(), user=user.id)
+
+        new_applicant_id = ApplicantMethods.assign_id_to_applicant(applicant)
+        ApplicantMethods.assign_school_to_applicant(applicant)
+        interview_methods.assign_interview(applicant)
+
+        msg = "{} {} just registered as an applicant! - codezero".format(applicant.first_name, applicant.last_name)
+        pushover.send_pushover(msg)
+        return new_applicant_id
+
+
+    @staticmethod
+    def user_list():
+        array = []
+        array.append(('Username', 'Password', 'Applicant name'))
+        for item in User.select():
+            if len(item.applicant) != 0:
+                array.append((item.login, item.password, item.applicant[0].first_name))
+            else:
+                array.append((item.login, item.password))
+
+        return array
 
 
