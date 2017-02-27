@@ -194,6 +194,7 @@ class SendEmails:
         Email.create(
             subject=subject,
             preview=preview[0:139],
+
             email_type="Mentor Interview",
             recipient_name=recipient_name,
             recipient_email=recipient_email

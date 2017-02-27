@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Codezero Admin</title>
+  <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ url_for('static', filename='css/details.css') }}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Hind+Madurai:400,500,600,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js" ></script>
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav_container">
+            <div class="logo"><img width="40px;" src="https://codezero.nobrainers.io/static/images/codeZeroLogo-copy.png"></div>
+            <div class="login_reg">
+                <a href="{{ url_for('login') }}">login</a>
+                <a href="{{ url_for('logout') }}">log out</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+
+
+</html>
