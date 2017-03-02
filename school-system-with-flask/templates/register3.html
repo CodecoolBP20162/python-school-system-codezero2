@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Codezero - School System</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,700,900" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home_resources/homepage.css') }}">
+</head>
+<body>
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="{{ url_for('login') }}">
+					<img alt="Brand" src="{{ url_for('static', filename='home_resources/cclogolarge.png') }}" width="170px">
+				</a>
+			</div>
+		</div>
+	</nav>
+	{% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class=flashes>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+    {% macro render_field(field) %}
+		<div class="field" style="position: absolute; transform: translateX(-150px); color: #fff; min-width: 150px;">
+			{% if field.errors %}
+				{% for error in field.errors %}
+					<div class="notification_error">{{ error }}</div>
+				{% endfor %}
+			{% endif %}
+		</div>
+		{{ field(**kwargs)|safe }}
+	{% endmacro %}
+	<div class="container-fluid second_section" style="height: 100vh;">
+		<div class="container second_container" style="padding-top: 40px;">
+			<h1 class="apply_text" style="margin-top: -200px;">Join hundreds of junior developers improving their craft every day.</h1>
+			<form method="POST" class="hiddenn">
+				{{ form2.hidden_tag() }}
+				<div>{{ render_field(form2.login, class="reginput", placeholder="Username") }}</div>
+				<div>{{ render_field(form2.first_name, class="reginput", placeholder="First Name") }}</div>
+				<div>{{ render_field(form2.last_name, class="reginput", placeholder="Last Name") }}</div>
+				<div>{{ render_field(form2.city, class="reginput", placeholder="Location") }}</div>
+				<div>{{ render_field(form2.email, class="reginput", placeholder="Email", **{"data-validation" : "email"}) }}</div>
+				<div>{{ render_field(form2.password, class="reginput", placeholder="Password") }}</div>
+				<div>{{ render_field(form2.password2, class="reginput", placeholder="Password again") }}</div>
+				<input type="submit" name="" value="Register" id="reg_submit">
+			</form>
+		</div>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</body>
+</html>
