@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, url_for, redirect, flash, abort
 from peewee import *
-from applicant_methods import * ##
+from applicant_methods import *  ##
 import mentor_methods  ##
 import interview_methods  ##
 from email_methods import *  ##
@@ -8,8 +8,6 @@ import forms  ##
 import pushover  ##
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 from flask_bcrypt import check_password_hash
-
-
 
 try:
     from forms import *
@@ -45,15 +43,12 @@ except Exception:
     from .email_methods import *
 
 
-
 def count_menu_items():
     num_of_applicants = int(len(Applicant.select()))
     num_of_interviews = int(len(Interview.select()))
     num_of_emails = int(len(Email.select()))
     num_of_mentors = int(len(Mentor.select()))
     return num_of_applicants, num_of_mentors, num_of_emails, num_of_interviews
-    
-
 
 
 app = Flask(__name__)
@@ -73,6 +68,8 @@ def load_user(user_id):
 
 
 """ LOGIN - INDEX PAGE"""
+
+
 @app.route('/assign_interview', methods=["GET", "POST"])
 @login_required
 def assgn():
@@ -80,6 +77,7 @@ def assgn():
     for applicant in applicants:
         interview_methods.assign_interview(applicant)
     return redirect(url_for('homepage'))
+
 
 @app.route('/', methods=["GET", "POST"])
 def login():
@@ -91,9 +89,11 @@ def login():
 
         try:
             user = User.get(form.username.data == User.login)
+            #return redirect(url_for('user_page', query=query))
         except DoesNotExist:
             flash('Invalid username or password.')
             return render_template('login.html', form=form, form2=form2)
+
         if user.password == form.password.data:
             login_user(user)
         elif check_password_hash(user.password, form.password.data):
@@ -110,11 +110,12 @@ def login():
         if current_user.role == 'admin':
             return redirect(url_for('homepage'))
         elif current_user.role == 'applicant':
-            return redirect(url_for('user_page'))
+            query = user.login
+            return redirect(url_for('user_page', query=query))
         elif current_user.role == 'mentor':
             return redirect(url_for('abort'))
         else:
-            return redirect(url_for('user_page'))
+            return redirect(url_for('homepage'))
     return render_template("login.html", form=form, form2=form2)
 
 
@@ -142,14 +143,14 @@ def homepage():
     form = forms.FilterApplicantForm()
     if request.method == "GET":
         return render_template(
-                                "index2.html",
-                                form=form,
-                                Applicants=Applicants,
-                                len_applicants=len_applicants,
-                                len_interviews=len_interviews,
-                                len_emails=len_emails,
-                                len_mentors=len_mentors
-                                )
+            "index2.html",
+            form=form,
+            Applicants=Applicants,
+            len_applicants=len_applicants,
+            len_interviews=len_interviews,
+            len_emails=len_emails,
+            len_mentors=len_mentors
+        )
 
     elif request.method == "POST":
         if request.form.get('update_form'):
@@ -263,7 +264,6 @@ def filter_by_school(query):
         return redirect(url_for(url, query=query))
 
 
-
 """ FILTER APPLICANTS BY STATUS """
 
 
@@ -321,13 +321,13 @@ def list_emails():
     len_applicants, len_mentors, len_emails, len_interviews = count_menu_items()
     form = forms.FilterEmailForm()
     if request.method == "GET":
-        return render_template('email.html', 
-                                form=form, 
-                                emails=emails, 
-                                len_applicants=len_applicants,
-                                len_interviews=len_interviews,
-                                len_emails=len_emails,
-                                len_mentors=len_mentors)
+        return render_template('email.html',
+                               form=form,
+                               emails=emails,
+                               len_applicants=len_applicants,
+                               len_interviews=len_interviews,
+                               len_emails=len_emails,
+                               len_mentors=len_mentors)
 
     elif request.method == "POST" and form.validate_on_submit():
         query = request.form.get('name')
@@ -348,13 +348,13 @@ def filter_by_type(query):
     len_applicants, len_mentors, len_emails, len_interviews = count_menu_items()
     form = forms.FilterEmailForm()
     if request.method == "GET":
-        return render_template('email.html', 
-                                form=form, 
-                                emails=emails, 
-                                len_applicants=len_applicants,
-                                len_interviews=len_interviews,
-                                len_emails=len_emails,
-                                len_mentors=len_mentors)
+        return render_template('email.html',
+                               form=form,
+                               emails=emails,
+                               len_applicants=len_applicants,
+                               len_interviews=len_interviews,
+                               len_emails=len_emails,
+                               len_mentors=len_mentors)
 
     elif request.method == "POST" and form.validate_on_submit():
         query = request.form.get('name')
@@ -375,13 +375,13 @@ def filter_by_subject(query):
     len_applicants, len_mentors, len_emails, len_interviews = count_menu_items()
     form = forms.FilterEmailForm()
     if request.method == "GET":
-        return render_template('email.html', 
-                                form=form, 
-                                emails=emails, 
-                                len_applicants=len_applicants,
-                                len_interviews=len_interviews,
-                                len_emails=len_emails,
-                                len_mentors=len_mentors)
+        return render_template('email.html',
+                               form=form,
+                               emails=emails,
+                               len_applicants=len_applicants,
+                               len_interviews=len_interviews,
+                               len_emails=len_emails,
+                               len_mentors=len_mentors)
 
     elif request.method == "POST" and form.validate_on_submit():
         query = request.form.get('name')
@@ -402,13 +402,13 @@ def filter_by_recipient(query):
     len_applicants, len_mentors, len_emails, len_interviews = count_menu_items()
     form = forms.FilterEmailForm()
     if request.method == "GET":
-        return render_template('email.html', 
-                                form=form, 
-                                emails=emails, 
-                                len_applicants=len_applicants,
-                                len_interviews=len_interviews,
-                                len_emails=len_emails,
-                                len_mentors=len_mentors)
+        return render_template('email.html',
+                               form=form,
+                               emails=emails,
+                               len_applicants=len_applicants,
+                               len_interviews=len_interviews,
+                               len_emails=len_emails,
+                               len_mentors=len_mentors)
 
     elif request.method == "POST" and form.validate_on_submit():
         query = request.form.get('name')
@@ -428,19 +428,19 @@ def list_interviews():
     form = forms.FilterInterviewForm()
     len_applicants, len_mentors, len_emails, len_interviews = count_menu_items()
     if request.method == "GET":
-        return render_template('interview.html', 
-                                form=form, 
-                                interviews=interviews, 
-                                len_applicants=len_applicants,
-                                len_interviews=len_interviews,
-                                len_emails=len_emails,
-                                len_mentors=len_mentors)
+        return render_template('interview.html',
+                               form=form,
+                               interviews=interviews,
+                               len_applicants=len_applicants,
+                               len_interviews=len_interviews,
+                               len_emails=len_emails,
+                               len_mentors=len_mentors)
 
     elif request.method == "POST" and form.validate_on_submit():
-            query = request.form.get('name')
-            choice = request.form.get('options')
-            url = interview_methods.filter_redirect(choice, query)
-            return redirect(url_for(url, query=query))
+        query = request.form.get('name')
+        choice = request.form.get('options')
+        url = interview_methods.filter_redirect(choice, query)
+        return redirect(url_for(url, query=query))
 
 
 """ FILTER INTERVIEWS BY APPLICANT """
@@ -451,18 +451,19 @@ def list_interviews():
 def filter_by_applicant(query):
     if current_user.role != 'admin':
         abort(404)
-    interviews = Interview.select().join(InterviewSlot).switch().join(Applicant).where(Applicant.first_name.contains(query) | Applicant.last_name.contains(query))
+    interviews = Interview.select().join(InterviewSlot).switch().join(Applicant).where(
+        Applicant.first_name.contains(query) | Applicant.last_name.contains(query))
     len_applicants, len_mentors, len_emails, len_interviews = count_menu_items()
     form = forms.FilterInterviewForm()
     if request.method == "GET":
         return render_template(
-                                "interview.html",
-                                form=form, 
-                                interviews=interviews, 
-                                len_applicants=len_applicants,
-                                len_interviews=len_interviews,
-                                len_emails=len_emails,
-                                len_mentors=len_mentors)
+            "interview.html",
+            form=form,
+            interviews=interviews,
+            len_applicants=len_applicants,
+            len_interviews=len_interviews,
+            len_emails=len_emails,
+            len_mentors=len_mentors)
 
     elif request.method == "POST" and form.validate_on_submit():
         query = request.form.get('name')
@@ -479,19 +480,20 @@ def filter_by_applicant(query):
 def filter_by_mentor(query):
     if current_user.role != 'admin':
         abort(404)
-    interviews = Interview.select().join(InterviewSlot).join(Mentor).switch().join(Applicant).where(Mentor.first_name.contains(query) | Mentor.last_name.contains(query))
+    interviews = Interview.select().join(InterviewSlot).join(Mentor).switch().join(Applicant).where(
+        Mentor.first_name.contains(query) | Mentor.last_name.contains(query))
     print(len(interviews))
     len_applicants, len_mentors, len_emails, len_interviews = count_menu_items()
     form = forms.FilterInterviewForm()
     if request.method == "GET":
         return render_template(
-                                "interview.html",
-                                form=form, 
-                                interviews=interviews, 
-                                len_applicants=len_applicants,
-                                len_interviews=len_interviews,
-                                len_emails=len_emails,
-                                len_mentors=len_mentors)
+            "interview.html",
+            form=form,
+            interviews=interviews,
+            len_applicants=len_applicants,
+            len_interviews=len_interviews,
+            len_emails=len_emails,
+            len_mentors=len_mentors)
 
     elif request.method == "POST" and form.validate_on_submit():
         query = request.form.get('name')
@@ -514,13 +516,13 @@ def filter_by_location(query):
     form = forms.FilterInterviewForm()
     if request.method == "GET":
         return render_template(
-                                "interview.html",
-                                form=form, 
-                                interviews=interviews, 
-                                len_applicants=len_applicants,
-                                len_interviews=len_interviews,
-                                len_emails=len_emails,
-                                len_mentors=len_mentors)
+            "interview.html",
+            form=form,
+            interviews=interviews,
+            len_applicants=len_applicants,
+            len_interviews=len_interviews,
+            len_emails=len_emails,
+            len_mentors=len_mentors)
 
     elif request.method == "POST" and form.validate_on_submit():
         query = request.form.get('name')
@@ -537,13 +539,19 @@ def logout():
     return redirect(url_for("login"))
 
 
-@app.route('/user', methods=["GET", "POST"])
+""" APPLICANT HOMEPAGE """
+
+
+@app.route('/applicant/profile/<query>', methods=["GET", "POST"])
 @login_required
-def user_page():
-    return render_template("user.html", user=current_user)
+def user_page(query):
+    # if current_user.role != 'applicant':
+    # return redirect(url_for('abort'))
+    applicant = Applicant.select().join(User).switch(Applicant).join(Interview).join(InterviewSlot).where(User.login == query).get()
+    return render_template("profile.html", user=applicant, name=applicant.first_name+" "+applicant.last_name)
 
 
-@app.route('/mentor', methods=["GET", "POST"])
+@app.route('/mentor/login', methods=["GET", "POST"])
 @login_required
 def mentor_page():
     if current_user.is_authenticated:

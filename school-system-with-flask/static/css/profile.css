@@ -1,5 +1,6 @@
 body {
     background-color: #f5f5f5;
+    font-family: 'Hind Madurai', sans-serif;
 }
 
 .card {
@@ -27,7 +28,7 @@ body {
     font-size: 20px;
     font-weight: 300;
     color: #777;
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid white;
 }
 
 .card .card-heading.image img {
@@ -140,6 +141,7 @@ body {
 }
 
 .card.people .card-info {
+    font-family: 'Hind Madurai', sans-serif;
     position: absolute;
     top: 150px;
     display: inline-block;
@@ -153,11 +155,12 @@ body {
 }
 
 .card.people .card-info .title {
+    font-family: 'Hind Madurai', sans-serif;
+    font-size: 30px;
+    font-weight: 600px;
     display: block;
     margin: 8px 14px 0 14px;
     overflow: hidden;
-    font-size: 16px;
-    font-weight: bold;
     line-height: 18px;
     color: #404040;
 }
@@ -170,6 +173,8 @@ body {
     line-height: 16px;
     color: #737373;
     text-overflow: ellipsis;
+    font-family: 'Hind Madurai', sans-serif;
+    font-weight: 500;
 }
 
 .card.people .card-bottom {
@@ -207,6 +212,7 @@ body {
 }
 
 .card.hovercard .avatar img {
+    overflow: hidden;
     width: 100px;
     height: 100px;
     max-width: 100px;
@@ -214,7 +220,9 @@ body {
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
-    border: 5px solid rgba(255, 255, 255, 0.5);
+    border: 5px solid rgba(149, 165, 166, 1);
+    background: url("http://24.p3k.hu/app/uploads/2015/09/kisgrofo_05-1024x683.jpg");
+    background-size: cover;
 }
 
 .card.hovercard .info {
@@ -223,10 +231,11 @@ body {
 
 .card.hovercard .info .title {
     margin-bottom: 4px;
-    font-size: 24px;
     line-height: 1;
     color: #262626;
     vertical-align: middle;
+    font-size: 30px;
+    font-weight: 800px;
 }
 
 .card.hovercard .info .desc {
@@ -271,37 +280,77 @@ html, body {
 
 table {
     position: static;
-    border: 5px #f5f5f5;
-    width: 50%;
-    height: 40%;
+    border: 1px #f5f5f5;
+
 }
 td {
-    width: 33%;
-    height: 100 px;
+    font-family: 'Hind Madurai', sans-serif;
+    width: 300px;
+    height: 120px;
     text-align: center;
     vertical-align: middle;
     color: white;
-    text-weight: bold;
-}
-td:hover{
-    background: darkblue;
-}
-#app_code{
-    background-color: #D24D57;
+    font-weight: 600;
+    color: #f5f5f5;
 }
 
+td p:nth-child(1) {
+    text-align: left;
+    padding-left: 15px;
+}
+
+td p:nth-child(2) {
+    font-size: 1.7em;
+}
+
+@media (max-width: 720px) {
+
+    td p:nth-child(2) {
+    font-size: 1em;
+    }
+
+    
+}
+
+
+#app_code{
+    background-color: #59ABE3;
+}
 #name {
-    background-color: #3498DB;
+    background-color: #F7A67B;
 }
 #email {
-    background-color: #446CB3 ;
+    background-color: #D34865;
 }
 #school {
-    background-color: #019875;
+    background-color: #B8DA8D;
 }
 #interview {
-    background-color: #F27935;
+    background-color: #B8DA8D;
 }
 #mentor {
-    background-color: #26C281;
+    background-color: #D34865;
+}
+#app_date {
+    background-color: #F7A67B;
+}
+#app_status{
+    background-color: #59ABE3;
+}
+
+.logout {
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 100px;
+    align-content: right;
+    color: #bdbdbd;
+    padding-right: 30px;
+}
+
+.logout_div {
+    height:50px;
+    width:100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
