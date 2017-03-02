@@ -85,7 +85,8 @@ def assgn():
 def login():
     form = forms.LoginForm()
     form2 = forms.RegisterForm()
-    if form.validate_on_submit():
+
+    if request.method == "POST" and form.validate_on_submit():
         # Login and validate the user.
         # user should be an instance of your `User` class
 
@@ -116,9 +117,7 @@ def login():
             return redirect(url_for('abort'))
         else:
             return redirect(url_for('user_page'))
-
     return render_template("homepage.html", form=form, form2=form2)
-
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
