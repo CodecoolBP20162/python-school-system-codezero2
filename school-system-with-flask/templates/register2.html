@@ -6,6 +6,7 @@
   <link href="https://fonts.googleapis.com/css?family=Hind+Madurai:400,500,600,700" rel="stylesheet">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
 </head>
 <body>
 	<div class="main_container">
@@ -51,7 +52,7 @@
 						<div class="input_wrapper">
 							<i class="fa fa-envelope famail" aria-hidden="true"></i>
 							
-							{{ render_field(form2.email, class="reginput", placeholder="Email") }}
+							{{ render_field(form2.email, class="reginput", placeholder="Email", **{"data-validation" : "email"}) }}
 						</div>
 						<div class="input_wrapper">
 							<i class="fa fa-unlock-alt fauser" aria-hidden="true"></i>
@@ -85,5 +86,19 @@
 
 	  ga('create', 'UA-90363422-2', 'auto');
 	  ga('send', 'pageview');
+	</script>
+	<script>
+
+	  $.validate({
+	    modules : 'location, date, security, file',
+	    errorMessagePosition : 'top',
+	    onModulesLoaded : function() {
+	      $('#country').suggestCountry();
+	    }
+	  });
+
+	  // Restrict presentation length
+	  $('#presentation').restrictLength( $('#pres-max-length') );
+
 	</script>
 </body>
