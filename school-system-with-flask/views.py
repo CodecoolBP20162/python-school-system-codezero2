@@ -561,12 +561,12 @@ def user_page(query):
     return render_template("profile.html", user=applicant, name=applicant.first_name + " " + applicant.last_name)
 
 
-@app.route('/mentor', methods=["GET", "POST"])
+@app.route('/mentor/profile', methods=["GET", "POST"])
 @login_required
 def mentor_page():
     if current_user.is_authenticated:
         if current_user.role != 'mentor':
-            abort(404)
+            return redirect(url_for('mentor_page'))
     else:
         abort(404)
     mentor = Mentor.get(user_id=current_user.id)
@@ -575,7 +575,7 @@ def mentor_page():
     slots_dict = fill_dict(mentor.id, this_week, WEEK_NUMBER)
     number_of_interviews = InterviewSlot.select().join(Interview).where(InterviewSlot.assigned_mentor == mentor.id)
     number_of_interviews = len(number_of_interviews)
-    return render_template('mentor_site.html', mentor=mentor, this_week=this_week, weekdays=WEEKDAYS, slots=slots_dict, hours=HOURS, num_intviews=number_of_interviews)
+    return render_template('mentor_page.html', mentor=mentor, this_week=this_week, weekdays=WEEKDAYS, slots=slots_dict, hours=HOURS, num_intviews=number_of_interviews)
 
 
 @app.route('/mentors', methods=["GET", "POST"])

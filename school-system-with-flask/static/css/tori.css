@@ -2,20 +2,25 @@
     display: inline-block;
     width: 100px;
     height: 30px;
+
 }
 
 .block-head:hover {
-    background: green;
+    background: darkslategrey;
 }
 
 .block-head-w {
     display: inline-block;
+
 }
 
 .hour {
     width: 100px;
     height: 40px;
-    text-align: top;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .first-column {
@@ -28,9 +33,39 @@
 }
 
 .green {
-    background: green;
+    background-color: #2ECC71;
+    margin: 3px;
 }
 
 .red {
-    background: red;
+    background-color: #D91E18;
+    margin: 3px;
 }
+
+.container {
+    vertical-align: middle;
+    padding-bottom: 50px;
+}
+
+.block-head {
+    text-transform: capitalize;
+    text-align: center;
+    margin: 2px;
+
+}
+
+.block-head-day {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2px;
+}
+
+.timetable_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
