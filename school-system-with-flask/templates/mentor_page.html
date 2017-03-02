@@ -4,46 +4,122 @@
     <meta charset="utf-8">
     <title>User Profile</title>
     <link href="{{ url_for('static', filename='css/mentor_page.css') }}" rel="stylesheet" type="text/css"/>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,700,900" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/tori.css') }}" rel="stylesheet" type="text/css"/>
+    <script src="{{ url_for('static',filename= 'js/tori.js') }}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
+
 <body>
 <div class="row">
-        <div class="col-lg-3 col-sm-6">
+    <div class="col-lg-3 col-sm-6">
 
-            <div class="card hovercard">
-                <div class="cardheader">
-                    <div class="logout_div">
-                        <a class="logout" href="{{ url_for('logout') }}">Log out</a>
-                    </div>
+        <div class="card hovercard">
+            <div class="cardheader">
+                <div class="logout_div">
+                    <a class="logout" href="{{ url_for('logout') }}">Log out</a>
                 </div>
-                <div class="avatar">
-                    <!-- <img alt="" src={{ url_for('static', filename='images/profile.png') }}> -->
-                    <img alt="" src="">
-                </div>
-                <div class="info">
-                    <div class="title">
-                        <p> My Account </p>
-                    </div>
+            </div>
+            <div class="avatar">
+                <!-- <img alt="" src={{ url_for('static', filename='images/profile.png') }}> -->
+                <img alt="" src="">
+            </div>
+            <div class="info">
+                <div class="title">
+                    <p> My Account </p>
                 </div>
             </div>
         </div>
-        <div id="tableContainer-1">
-                        <div id="tableContainer-2" style="overflow-x:auto;">
-                            <table id="myTable">
-                                <tr>
-                                    <td id="app_code">
-                                        <p>Name</p>
-                                        <p>{{ mentor.first_name }} {{ mentor.last_name }}</p>
-                                    </td>
-                                    <td id="name">
-                                        <p>Email</p>
-                                        <p> {{ mentor.email }} </p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
+    </div>
+    <div id="tableContainer-1">
+        <div id="tableContainer-2" style="overflow-x:auto;">
+            <table id="myTable">
+                <tr>
+                    <td id="app_code">
+                        <p>Name</p>
+                        <p>{{ mentor.first_name }} {{ mentor.last_name }}</p>
+                    </td>
+                    <td id="name">
+                        <p>Email</p>
+                        <p> {{ mentor.email }} </p>
+                    </td>
+                </tr>
+            </table>
         </div>
+    </div>
+    <div>
+        <p class="interview_schedule">Interview Schedule</p>
+    </div>
+<div class="container timetable_container">
 
+        <div class="row-head">
+            <div class="block-head" style="opacity: 0;">
+                a
+            </div>
+            {% for day in weekdays %}
+                <div class="block-head-w">
+                    <div class="block-head">
+                        {{ day }}
+                    </div>
+                    <div class="block-head-day">
+                        {{ this_week[day] }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    <div>
+        <div class="first-column">
+            <div class="hour">
+                10:00-11:00
+            </div>
+            <div class="hour">
+                11:00-12:00
+            </div>
+            <div class="hour">
+                13:00-14:00
+            </div>
+            <div class="hour">
+                14:00-15:00
+            </div>
+        </div>
+        {% for day in weekdays %}
+            <div class="day-column">
+                {% for hour in hours %}
+                    {% if slots[day][hour].reserved==True %}
+
+                        <div class="hour reserved red" data-applicant='[ "{{ slots[day][hour].start }}" ,
+                                                                     "{{ slots[day][hour].interview[0].applicant.first_name }} {{ slots[day][hour].interview[0].applicant.last_name }}",
+                                                                     "{{ slots[day][hour].interview[0].applicant.applicant_id }}"]'
+                             data-toggle="modal" data-target="#showInterview">
+                            {{ "RESERVED" }}
+                        </div>
+                    {% else %}
+                        <div class="hour green" data-id="{{ slots[day][hour].id }}" data-toggle="modal"
+                             data-target="#showMenu">
+                            {{ "FREE" }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+    <!--<div class="modal hide" id="showInterview">
+        <div class="modal-header">
+            <button class="close" data-dismiss="modal">×</button>
+        </div>
+        <div class="modal-body">
+            <p>Applicant name:</p>
+            <p id="slotApplicantName"></p>
+            <p>Applicant code:</p>
+            <p id="slotApplicantCode"></p>
+            <p>Interview start time:</p>
+            <p id="slotStart"></p>
+
+        </div>-->
+</div>
 
 </body>
