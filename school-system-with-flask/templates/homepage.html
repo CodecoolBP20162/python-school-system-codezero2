@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Codezero - School System</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,700,900" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home_resources/homepage.css') }}">
+</head>
+<body>
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="{{ url_for('login') }}">
+					<img alt="Brand" src="{{ url_for('static', filename='home_resources/cclogolarge.png') }}" width="170px">
+				</a>
+			</div>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a id="navlink" role="button" data-toggle="collapse" href="#asd" aria-expanded="false" aria-controls="asd">Login</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	{% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class=flashes>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+	{% macro render_field(field) %}
+		<div class="field" style="position: absolute; width: 150px;">
+			{% if field.errors %}
+				{% for error in field.errors %}
+					<div class="notification_error">{{ error }}</div>
+				{% endfor %}
+			{% endif %}
+		</div>
+		{{ field(**kwargs)|safe }}
+	{% endmacro %}
+	<div class="collapse" id="asd">
+	  <div class="well">
+		<form method="POST" action="" class="loginform">
+			{{ form.hidden_tag() }}
+			<div class="input_wrapper">
+				<i class="fa fa-user fauser" aria-hidden="true"></i>
+				{{ render_field(form.username, class="loginput", placeholder="Username") }}
+			</div>
+			<div class="input_wrapper">
+				<i class="fa fa-unlock-alt fauser" aria-hidden="true"></i>
+				{{ render_field(form.password, class="loginput", placeholder="Password") }}
+			</div>
+			<input type="submit" name="" id="submit" class="login_submit" value="Submit">
+		</form>
+	  </div>
+	</div>
+	<div class="container-fluid hero_section">
+		<div class="row">
+			<div class="col-md-6 col left_col">
+				<h1 class="hero_header">YOU CAN BE A PROGRAMMER TOO!</h1>
+				<p class="hero_paragraph">
+				Codecool is an 18 month practice oriented school. By the end of the course a guaranteed job position is waiting for you. Not only because 20.000 coders are missing from the market - you will be ready to work as a software developer. Start paying the admission fee after you get your first salary. Cool, isn't it?</p>
+			</div>
+			<div class="col-md-6 col right_col">
+				<!-- <img class="hero_img" src="header_visual_blue.png"> -->
+				<div class="desktop-wrapper">
+					<iframe width="660" height="375" src="//www.youtube.com/embed/o3x_PCafH_Y" frameborder="0" allowfullscreen></iframe>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container-fluid lang_section" >
+		<div class="lang_container">
+			<h1>LEARN NEW SKILLS</h1>
+			<div class="lang_row">
+				<div class="card" onmouseover="card1Func()" onmouseleave="card1Func2()">
+					<img class="card_img1 card1img" src="{{ url_for('static', filename='home_resources/python.svg') }}">
+					<img class="card_img2 card1img" src="{{ url_for('static', filename='home_resources/python.svg') }}">
+					<p>python</p>
+					<div class="code_example1">
+						<img id="card1_code" src="{{ url_for('static', filename='home_resources/py.png') }}" width="280">
+					</div>
+				</div>
+				<div class="card" onmouseover="card2Func()" onmouseleave="card2Func2()" style="background: #D24D57;">
+					<img class="card_img1 card2img" src="{{ url_for('static', filename='home_resources/curly-brackets.svg') }}">
+					<img class="card_img2 card2img" src="{{ url_for('static', filename='home_resources/curly-brackets.svg') }}">
+					<p>javascript</p>
+					<div class="code_example2">
+						<img id="card2_code" src="{{ url_for('static', filename='home_resources/js.png') }}" width="280">
+					</div>
+				</div>
+				<div class="card" onmouseover="card3Func()" onmouseleave="card3Func2()" style="background: #019875;">
+					<img class="card_img1 card3img" src="{{ url_for('static', filename='home_resources/java.svg') }}">
+					<img class="card_img2 card3img" src="{{ url_for('static', filename='home_resources/java.svg') }}">
+					<p>java</p>
+					<div class="code_example3">
+						<img id="card3_code" src="{{ url_for('static', filename='home_resources/java.png') }}" width="280">
+					</div>
+				</div>
+			</div>
+			<div class="lang_row">
+				<div class="card" style="background: #26C281;">
+					<img class="card_img1" src="{{ url_for('static', filename='home_resources/android.svg') }}">
+					<img class="card_img2" src="{{ url_for('static', filename='home_resources/android.svg') }}">
+					<p>android</p>
+				</div>
+				<div class="card" style="background: #F27935;">
+					<img class="card_img1" src="{{ url_for('static', filename='home_resources/apple.svg') }}" style="transform: rotate(-25deg); max-width: 115px;">
+					<img class="card_img2" src="{{ url_for('static', filename='home_resources/apple.svg') }}">
+					<p>ios</p>
+				</div>
+				<div class="card" style="background: #3498DB;">
+					<img class="card_img1" src="{{ url_for('static', filename='home_resources/html5.svg') }}">
+					<img class="card_img2" src="{{ url_for('static', filename='home_resources/html5.svg') }}">
+					<p>front-end</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container-fluid first_section" >
+		<div class="first_container">
+			<h1>DID YOU KNOW?...</h1>
+			<p>Codecool students develop comprehensive skills in mainstream technologies. The curriculum includes among others: Python, C#, Java, SQL, Git and various web technologies. Technology is changing fast and the spectrum is widening. Therefore we train Codecoolers for a future proof, platform-agnostic mindset.
+				
+			Soft skills are often more important than knowing a specific tech or tool. The training is practice oriented from the very beginning and focuses on soft skills as well. This approach and real life project experience yield the result that Codecoolers are great team players and problem solvers.</p>
+		</div>
+	</div>
+	<div class="container-fluid second_section">
+		<div class="container second_container">
+			<h1 class="apply_text">Join hundreds of junior developers improving their craft every day.</h1>
+			<a href="{{ url_for('register') }}"><button class="btn btn-danger btn-lg btn_apply">APPLY NOW!</button></a>
+		</div>
+	</div>
+	<!-- #### FOOTER SECTION #### 
+	<div class="container-fluid footer_section">
+
+	</div>
+	-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript">
+    	$(".btn_apply").click(function(){
+		    $(".apply_text").addClass("slide_up")
+		    $(".hiddenn").addClass("show_form")
+		    $(".btn_apply").hide(300);
+		});
+    </script>
+    <script type="text/javascript">
+	    card1Func = function(){
+	    	$(".card1img").hide(300)
+	    	$(".code_example1").show(300)
+	    	console.log("HOVER HOVER")
+	    };
+
+	    card1Func2 = function(){
+	    	$(".card1img").show(300)
+	    	$(".code_example1").hide(300)
+	    };
+
+	    card2Func = function(){
+	    	$(".card2img").hide(300)
+	    	$(".code_example2").show(300)
+	    	console.log("HOVER HOVER")
+	    };
+
+	    card2Func2 = function(){
+	    	$(".card2img").show(300)
+	    	$(".code_example2").hide(300)
+	    };
+
+	    card3Func = function(){
+	    	$(".card3img").hide(300)
+	    	$(".code_example3").show(300)
+	    	console.log("HOVER HOVER")
+	    };
+
+	    card3Func2 = function(){
+	    	$(".card3img").show(300)
+	    	$(".code_example3").hide(300)
+	    };
+    </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+.block-head {
+    display: inline-block;
+    width: 100px;
+    height: 30px;
+}
+
+.block-head:hover {
+    background: green;
+}
+
+.block-head-w {
+    display: inline-block;
+}
+
+.hour {
+    width: 100px;
+    height: 40px;
+    text-align: top;
+}
+
+.first-column {
+    width: 100px;
+    display: inline-block;
+}
+
+.day-column {
+    display:inline-block;
+}
+
+.green {
+    background: green;
+}
+
+.red {
+    background: red;
+}

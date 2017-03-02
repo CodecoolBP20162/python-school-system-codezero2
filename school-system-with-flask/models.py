@@ -64,6 +64,7 @@ class InterviewSlot(BaseModel):
     start = DateTimeField()
     end = DateTimeField()
     reserved = BooleanField()
+    week = IntegerField()
     assigned_mentor = ForeignKeyField(Mentor, related_name="slot")
 
     class Meta:
@@ -86,7 +87,16 @@ class Email(BaseModel):
     recipient_name = CharField()
     recipient_email = CharField(null=True)
 
+class Week(BaseModel):
+    id=IntegerField()
+    monday=DateField()
+    tuesday=DateField()
+    wednesday=DateField()
+    thursday=DateField()
+    friday=DateField()
+
 #db.create_table(Email)
+
 
 '''
 for i in range(1, 7):
@@ -112,4 +122,16 @@ for i in range(10, 20):
 for i in range(20, 30):
     InterviewSlot.create(start='2017-04-{} 11:00'.format(i), end='2017-04-{} 12:00'.format(i), reserved=False, assigned_mentor=6)
 '''
+"""
+Week.create(id=11,monday='2017-03-13',tuesday='2017-03-14',wednesday='2017-03-15',thursday='2017-03-16',friday='2017-03-17')
+Week.create(id=12,monday='2017-03-20',tuesday='2017-03-21',wednesday='2017-03-22',thursday='2017-03-23',friday='2017-03-24')
+"""
+"""
+mentors=Mentor.select()
 
+for mentor in mentors:
+    for hour in range(10,12):
+        InterviewSlot.create(start='2017-03-03 {}:00'.format(hour),end='2017-03-03 {}:00'.format(hour + 1),reserved=False,assigned_mentor=mentor.id,week=9)
+    for hour in range(13,15):
+        InterviewSlot.create(start='2017-03-03 {}:00'.format(hour),end= '2017-03-03 {}:00'.format(hour + 1),reserved=False,assigned_mentor=mentor.id,week=9)
+"""

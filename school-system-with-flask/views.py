@@ -1,13 +1,16 @@
 from flask import Flask, render_template, request, url_for, redirect, flash, abort
 from peewee import *
-from applicant_methods import *  ##
-import mentor_methods  ##
-import interview_methods  ##
-from email_methods import *  ##
-import forms  ##
-import pushover  ##
+
+from applicant_methods import *
+from timetable import *
+import mentor_methods
+import interview_methods
+from email_methods import *
+import forms
+import pushover
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 from flask_bcrypt import check_password_hash
+
 
 try:
     from forms import *
@@ -83,24 +86,25 @@ def assgn():
 def login():
     form = forms.LoginForm()
     form2 = forms.RegisterForm()
+
     if request.method == "POST" and form.validate_on_submit():
         # Login and validate the user.
         # user should be an instance of your `User` class
 
         try:
             user = User.get(form.username.data == User.login)
-            #return redirect(url_for('user_page', query=query))
+
         except DoesNotExist:
             flash('Invalid username or password.')
-            return render_template('login.html', form=form, form2=form2)
-
-        if user.password == form.password.data:
-            login_user(user)
-        elif check_password_hash(user.password, form.password.data):
-            login_user(user)
-        else:
+            return render_template('homepage.html', form=form, form2=form2)
+        try:
+            if user.password == form.password.data:
+                login_user(user)
+            elif check_password_hash(user.password, form.password.data):
+                login_user(user)
+        except Exception:
             flash('Invalid password.')
-            return render_template('login.html', form=form, form2=form2)
+            return render_template('homepage.html', form=form, form2=form2)
 
         # next = request.args.get('next')
         # is_safe_url should check if the url is safe for redirects.
@@ -110,25 +114,31 @@ def login():
         if current_user.role == 'admin':
             return redirect(url_for('homepage'))
         elif current_user.role == 'applicant':
+
             query = user.login
             return redirect(url_for('user_page', query=query))
         elif current_user.role == 'mentor':
             return redirect(url_for('mentor_page'))
         else:
             return redirect(url_for('homepage'))
-    return render_template("login.html", form=form, form2=form2)
+    return render_template("homepage.html", form=form, form2=form2)
 
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
     form2 = forms.RegisterForm()
+    form = forms.LoginForm()
     if request.method == "POST" and form2.validate_on_submit():
         flash("You have successfully registered", "success")
         id = ApplicantMethods.create_new_user(form2)
         SendEmails.send_emails(id)
-        return redirect(url_for("login"))
-    return render_template("register2.html", form2=form2)
+        return redirect(url_for("thanks"))
+    return render_template("register3.html", form2=form2, form=form)
 
+
+@app.route('/thanks')
+def thanks():
+    return render_template('thanks.html')
 
 """ ADMIN HOMEPAGE """
 
@@ -151,7 +161,6 @@ def homepage():
             len_emails=len_emails,
             len_mentors=len_mentors
         )
-
     elif request.method == "POST":
         if request.form.get('update_form'):
             app_id = request.form.get('update_form_applicant_id')
@@ -547,28 +556,26 @@ def logout():
 def user_page(query):
     # if current_user.role != 'applicant':
     # return redirect(url_for('abort'))
-    applicant = Applicant.select().join(User).switch(Applicant).join(Interview).join(InterviewSlot).where(User.login == query).get()
-    return render_template("profile.html", user=applicant, name=applicant.first_name+" "+applicant.last_name)
+    applicant = Applicant.select().join(User).switch(Applicant).join(
+        Interview).join(InterviewSlot).where(User.login == query).get()
+    return render_template("profile.html", user=applicant, name=applicant.first_name + " " + applicant.last_name)
 
 
-@app.route('/mentor/login', methods=["GET", "POST"])
+@app.route('/mentor', methods=["GET", "POST"])
 @login_required
 def mentor_page():
     if current_user.is_authenticated:
         if current_user.role != 'mentor':
-            return redirect(url_for('mentor_page'))
+            abort(404)
     else:
         abort(404)
     mentor = Mentor.get(user_id=current_user.id)
-    interviewlots = InterviewSlot.select().where(InterviewSlot.assigned_mentor == mentor.id)
-    interviews = Interview.select().join(InterviewSlot).where(InterviewSlot.assigned_mentor == mentor.id)
-    num_of_intvws = len(interviews)
-    form = forms.AddInterviewSlot()
-    if form.validate_on_submit():
-        InterviewSlot.create(start=form.start.data, end=form.end.data, reserved=False, assigned_mentor=mentor.id)
-        return redirect(url_for("mentor_page"))
-    return render_template("mentor_page.html", interviewlots=interviewlots, interviews=interviews, form=form,
-                           mentor=mentor, num_of_intvws=num_of_intvws)
+    WEEK_NUMBER = 9
+    this_week = get_this_week(WEEK_NUMBER)
+    slots_dict = fill_dict(mentor.id, this_week, WEEK_NUMBER)
+    number_of_interviews = InterviewSlot.select().join(Interview).where(InterviewSlot.assigned_mentor == mentor.id)
+    number_of_interviews = len(number_of_interviews)
+    return render_template('mentor_site.html', mentor=mentor, this_week=this_week, weekdays=WEEKDAYS, slots=slots_dict, hours=HOURS, num_intviews=number_of_interviews)
 
 
 @app.route('/mentors', methods=["GET", "POST"])
