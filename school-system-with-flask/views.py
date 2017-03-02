@@ -85,6 +85,7 @@ def assgn():
 def login():
     form = forms.LoginForm()
     form2 = forms.RegisterForm()
+
     if request.method == "POST" and form.validate_on_submit():
         # Login and validate the user.
         # user should be an instance of your `User` class
@@ -93,14 +94,15 @@ def login():
             user = User.get(form.username.data == User.login)
         except DoesNotExist:
             flash('Invalid username or password.')
-            return render_template('login.html', form=form, form2=form2)
-        if user.password == form.password.data:
-            login_user(user)
-        elif check_password_hash(user.password, form.password.data):
-            login_user(user)
-        else:
+            return render_template('homepage.html', form=form, form2=form2)
+        try:
+            if user.password == form.password.data:
+                login_user(user)
+            elif check_password_hash(user.password, form.password.data):
+                login_user(user)
+        except Exception:
             flash('Invalid password.')
-            return render_template('login.html', form=form, form2=form2)
+            return render_template('homepage.html', form=form, form2=form2)
 
         # next = request.args.get('next')
         # is_safe_url should check if the url is safe for redirects.
@@ -115,19 +117,23 @@ def login():
             return redirect(url_for('abort'))
         else:
             return redirect(url_for('user_page'))
-    return render_template("login.html", form=form, form2=form2)
-
+    return render_template("homepage.html", form=form, form2=form2)
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
     form2 = forms.RegisterForm()
+    form = forms.LoginForm()
     if request.method == "POST" and form2.validate_on_submit():
         flash("You have successfully registered", "success")
         id = ApplicantMethods.create_new_user(form2)
         SendEmails.send_emails(id)
-        return redirect(url_for("login"))
-    return render_template("register2.html", form2=form2)
+        return redirect(url_for("thanks"))
+    return render_template("register3.html", form2=form2, form=form)
 
+
+@app.route('/thanks')
+def thanks():
+    return render_template('thanks.html')
 
 """ ADMIN HOMEPAGE """
 
