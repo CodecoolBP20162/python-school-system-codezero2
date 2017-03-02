@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>User Profile</title>
+    <link href="{{ url_for('static', filename='css/mentor_page.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,700,900" rel="stylesheet">
+</head>
+<body>
+<div class="row">
+        <div class="col-lg-3 col-sm-6">
+
+            <div class="card hovercard">
+                <div class="cardheader">
+                    <div class="logout_div">
+                        <a class="logout" href="{{ url_for('logout') }}">Log out</a>
+                    </div>
+                </div>
+                <div class="avatar">
+                    <!-- <img alt="" src={{ url_for('static', filename='images/profile.png') }}> -->
+                    <img alt="" src="">
+                </div>
+                <div class="info">
+                    <div class="title">
+                        <p> My Account </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="tableContainer-1">
+                        <div id="tableContainer-2" style="overflow-x:auto;">
+                            <table id="myTable">
+                                <tr>
+                                    <td id="app_code">
+                                        <p>Name</p>
+                                        <p>{{ mentor.first_name }} {{ mentor.last_name }}</p>
+                                    </td>
+                                    <td id="name">
+                                        <p>Email</p>
+                                        <p> {{ mentor.email }} </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+        </div>
+
+
+</body>

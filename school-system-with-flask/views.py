@@ -567,7 +567,7 @@ def mentor_page():
     if form.validate_on_submit():
         InterviewSlot.create(start=form.start.data, end=form.end.data, reserved=False, assigned_mentor=mentor.id)
         return redirect(url_for("mentor_page"))
-    return render_template("mentor_site.html", interviewlots=interviewlots, interviews=interviews, form=form,
+    return render_template("mentor_page.html", interviewlots=interviewlots, interviews=interviews, form=form,
                            mentor=mentor, num_of_intvws=num_of_intvws)
 
 
