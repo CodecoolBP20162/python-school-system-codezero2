@@ -113,7 +113,7 @@ def login():
             query = user.login
             return redirect(url_for('user_page', query=query))
         elif current_user.role == 'mentor':
-            return redirect(url_for('abort'))
+            return redirect(url_for('mentor_page'))
         else:
             return redirect(url_for('homepage'))
     return render_template("login.html", form=form, form2=form2)
@@ -556,7 +556,7 @@ def user_page(query):
 def mentor_page():
     if current_user.is_authenticated:
         if current_user.role != 'mentor':
-            abort(404)
+            return redirect(url_for('mentor_page'))
     else:
         abort(404)
     mentor = Mentor.get(user_id=current_user.id)
