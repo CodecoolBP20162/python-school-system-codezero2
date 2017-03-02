@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js" ></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
 </head>
 <body>
 	<div class="main_container">
@@ -155,7 +156,7 @@
 										<input type="hidden" name="update_form" value="update_form">
 										<div class="update_item">
 											<label for="update_email" style="font-size: 0.8em;">Email:</label>
-											<input type="text" name="update_email" id="update_email" value="{{ applicant.email }}">
+											<input type="text" name="update_email" id="update_email" value="{{ applicant.email }}" data-validation="email">
 										</div>
 										<div class="update_item">
 											<label for="update_school" style="font-size: 0.8em;">School:</label>
@@ -190,45 +191,33 @@
 		</div>
 		<!-- ##### END APP CONTAINER ##### -->
 	</div>
-	<!--
 	<script type="text/javascript">
-		$("#mentor_menu").click(function(){
-			$("#applicants").removeClass("show");
-			$("#applicants").addClass("fade");
-			$("#mentors").removeClass("fade");
-			$("#mentors").addClass("show");
-			$("#app_button").removeClass("active");
-			$("#mentor_button").addClass("active");
-		});
-	</script>
-	<script type="text/javascript">
-		$("#applicant_menu").click(function(){
-			$("#mentors").removeClass("show");
-			$("#mentors").addClass("fade");
-			$("#applicants").removeClass("fade");
-			$("#applicants").addClass("show");
-			$("#mentor_button").removeClass("active");
-			$("#app_button").addClass("active");
-		});
-	</script>
-	-->
-	<!--
-	<script type="text/javascript">
-		$(".fa-bars").click(function(){
-			$("#hidden-"+this.id).toggleClass("show_details");
-		});
-	</script>
-	-->
-	<script type="text/javascript">
-		$(".fa-bars").click(function(){
+		$(".fa-bars").click(function(show){
 	    	$("#hidden-"+this.id).slideToggle();
 		});
+
+		show = function () {
+			document.getElementByClass("")
+		};
 	</script>
 	<script type="text/javascript">
 		$(".add_button").click(function(){
 			$(".add_button").hide()
 			$(".new_user_form").show(300)
 		});
+	</script>
+	<script>
+
+	  $.validate({
+	    modules : 'location, date, security, file',
+	    onModulesLoaded : function() {
+	      $('#country').suggestCountry();
+	    }
+	  });
+
+	  // Restrict presentation length
+	  $('#presentation').restrictLength( $('#pres-max-length') );
+
 	</script>
 </body>
 </html>
