@@ -33,9 +33,18 @@
     margin: 3px;
 }
 
+.green:hover {
+    background-color: #00CC00;
+    margin: 3px;
+}
+
 .red {
     background-color: #D91E18;
     margin: 3px;
+}
+
+.red:hover {
+    background-color: #761c19;
 }
 
 .container {
