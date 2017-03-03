@@ -64,5 +64,17 @@
     align-items: center;
 }
 
+.modal-body {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.modal-popup1, .modal-popup2, .modal-popup3 {
+    display: inline;
+    padding: 13px;
+}
+
+
 
 

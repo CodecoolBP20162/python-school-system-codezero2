@@ -2,14 +2,44 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>User Profile</title>
-    <link href="{{ url_for('static', filename='css/mentor_page.css') }}" rel="stylesheet" type="text/css"/>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,700,900" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/tori.css') }}" rel="stylesheet" type="text/css"/>
-    <script src="{{ url_for('static',filename= 'js/tori.js') }}"></script>
+    <title>codecool school system</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <meta content="Webflow" name="generator">
+    <link href="{{ url_for('static', filename='css/normalize.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='css/webflow.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='css/codecool-school-system.webflow.css') }}" rel="stylesheet"
+          type="text/css">
+    <link href="{{ url_for('static', filename='css/tori.css') }}" rel="stylesheet"
+          type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome/css/font-awesome.min.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
+    <script type="text/javascript">
+        WebFont.load({
+            google: {
+                families: ["Exo:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic"]
+            }
+        });
+    </script>
+    <script src=" {{ url_for('static', filename='js/modernizr.js') }} " type="text/javascript"></script>
+    <script src=" {{ url_for('static', filename='jquery-3.1.1.min.js') }} " type="text/javascript"></script>
+    <script src=" {{ url_for('static', filename='js/webflow.js') }} " type="text/javascript"></script>
+    <script src=" {{ url_for('static', filename='jquery-latest.js') }} " type="text/javascript"></script>
+    <script src=" {{ url_for('static', filename='jquery.tablesorter.js') }} " type="text/javascript"></script>
+    <link href="https://daks2k3a4ib2z.cloudfront.net/img/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="https://daks2k3a4ib2z.cloudfront.net/img/webclip.png" rel="apple-touch-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title>User Profile</title>
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,700,900" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="{{ url_for('static', filename='css/tori.css') }}" rel="stylesheet" type="text/css"/>
+    <script src="{{ url_for('static',filename= 'js/tori.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/mentor_page.css') }}" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
@@ -52,7 +82,7 @@
     <div>
         <p class="interview_schedule">Interview Schedule</p>
     </div>
-<div class="container timetable_container">
+    <div class="container timetable_container">
 
         <div class="row-head">
             <div class="block-head" style="opacity: 0;">
@@ -69,57 +99,63 @@
                 </div>
             {% endfor %}
         </div>
-    <div>
-        <div class="first-column">
-            <div class="hour">
-                10:00-11:00
+        <div>
+            <div class="first-column">
+                <div class="hour">
+                    10:00-11:00
+                </div>
+                <div class="hour">
+                    11:00-12:00
+                </div>
+                <div class="hour">
+                    13:00-14:00
+                </div>
+                <div class="hour">
+                    14:00-15:00
+                </div>
             </div>
-            <div class="hour">
-                11:00-12:00
-            </div>
-            <div class="hour">
-                13:00-14:00
-            </div>
-            <div class="hour">
-                14:00-15:00
-            </div>
-        </div>
-        {% for day in weekdays %}
-            <div class="day-column">
-                {% for hour in hours %}
-                    {% if slots[day][hour].reserved==True %}
+            {% for day in weekdays %}
+                <div class="day-column">
+                    {% for hour in hours %}
+                        {% if slots[day][hour].reserved==True %}
 
-                        <div class="hour reserved red" data-applicant='[ "{{ slots[day][hour].start }}" ,
+                            <div class="hour reserved red" data-applicant='[ "{{ slots[day][hour].start }}" ,
                                                                      "{{ slots[day][hour].interview[0].applicant.first_name }} {{ slots[day][hour].interview[0].applicant.last_name }}",
                                                                      "{{ slots[day][hour].interview[0].applicant.applicant_id }}"]'
-                             data-toggle="modal" data-target="#showInterview">
-                            {{ "RESERVED" }}
-                        </div>
-                    {% else %}
-                        <div class="hour green" data-id="{{ slots[day][hour].id }}" data-toggle="modal"
-                             data-target="#showMenu">
-                            {{ "FREE" }}
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
-        {% endfor %}
+                                 data-toggle="modal" data-target="#showInterview">
+                                {{ "RESERVED" }}
+                            </div>
+                        {% else %}
+                            <div class="hour green" data-id="{{ slots[day][hour].id }}" data-toggle="modal"
+                                 data-target="#showMenu">
+                                {{ "FREE" }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
     </div>
-</div>
 
-    <!--<div class="modal hide" id="showInterview">
+    <div class="modal hide" id="showInterview">
         <div class="modal-header">
             <button class="close" data-dismiss="modal">×</button>
         </div>
         <div class="modal-body">
-            <p>Applicant name:</p>
-            <p id="slotApplicantName"></p>
-            <p>Applicant code:</p>
-            <p id="slotApplicantCode"></p>
-            <p>Interview start time:</p>
-            <p id="slotStart"></p>
+            <div class="modal-popup1">
+                <span>Applicant name:</span>
+                <span id="slotApplicantName"></span><br>
+            </div>
+            <div class="modal-popup2">
+                <br><span>Applicant code: </span>
+                <span id="slotApplicantCode"></span><br>
+            </div>
+            <div class="modal-popup3">
+                <br><span>Interview start time: </span>
+                <span id="slotStart"></p>
+            </div>
 
-        </div>-->
-</div>
+        </div>
+    </div>
 
 </body>
